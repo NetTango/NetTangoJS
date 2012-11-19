@@ -1,3 +1,5 @@
+library nettango;
+
 import 'dart:html';
 import 'dart:math';
 import 'dart:json';
@@ -10,7 +12,6 @@ part 'Tween.dart';
 part 'Model.dart';
 part 'Toolbar.dart';
 part 'Button.dart';
-part 'StackGraph.dart';
 part 'JsonObject.dart';
 part 'NetTango.dart';
 
