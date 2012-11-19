@@ -1,3 +1,5 @@
+library nettango;
+
 import 'dart:html';
 import 'dart:math';
 import 'dart:json';
@@ -10,7 +12,7 @@ part 'Tween.dart';
 part 'Model.dart';
 part 'Toolbar.dart';
 part 'Button.dart';
-part 'StackGraph.dart';
+part 'PieChart.dart';
 part 'JsonObject.dart';
 part 'NetTango.dart';
 
@@ -19,6 +21,7 @@ void main() {
    DriftModel model = new DriftModel();
    NetTango ntango = new NetTango(model);
    ntango.showToolbar();
+   ntango.resizeToFitScreen();
    ntango.restart();
 }
 
