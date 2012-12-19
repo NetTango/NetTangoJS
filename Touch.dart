@@ -80,8 +80,10 @@ class TouchManager {
  */
    Touchable findTouchTarget(TouchEvent tp) {
       for (var t in touchables) {
-         if (t.containsTouch(tp)) {
-            return t;
+        if (t.containsTouch(tp)) {
+
+
+        return t;
          }
       }
       return null;
@@ -203,6 +205,7 @@ class TouchManager {
             drag = true;
          }
          else if (t.up) {
+           print("t.up");
             changed.add(new TouchEvent.fromJSON(t));
             up = true;
          }
@@ -221,7 +224,7 @@ class TouchManager {
 /*
  * Objects on the screen must implement this interface to receive touch events
  */
-interface Touchable {
+abstract class Touchable {
    
    bool containsTouch(TouchEvent event);
    

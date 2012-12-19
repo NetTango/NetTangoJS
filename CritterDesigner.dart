@@ -43,13 +43,13 @@ class DesignerModel extends Model {
       clearTurtles();
       clearPatches();
       initPatches();
-      
-      var colors = [
-                   new Color(255, 0, 0, 255),
-                   new Color(0, 255, 0, 255),
-                   new Color(0, 0, 255, 255),
-                   new Color(255, 255, 0, 255),
-                   new Color(0, 255, 255, 255)];      
+//      
+//      var colors = [
+//                   new Color(255, 0, 0, 255),
+//                   new Color(0, 255, 0, 255),
+//                   new Color(0, 0, 255, 255),
+//                   new Color(255, 255, 0, 255),
+//                   new Color(0, 255, 255, 255)];      
       designPad = new CritterDesignerPad();
 
    }
@@ -170,7 +170,8 @@ class DesignerTurtle extends Turtle {
   
   }
   
-  // overwrite: turn alpha to 100 so we see it clearly for a brief moment
+  // override: turn alpha to 100 so we see it clearly for a brief moment
+  // this doesn't work. I think it is removed in between this and it being redrawn
   void die() {
     color.alpha = 100;
     color.red = 255;

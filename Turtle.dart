@@ -18,7 +18,7 @@ class Turtle implements Touchable {
    int id;            // all turtles have a unique id number
    num x = 0, y = 0;  // turtle coordinates in world space
    num size = 1;      // turtle size
-   num heading = 0;   // turtle heading in radians
+   num heading = 0;   // turtle heading in radians ARTHUR: DEGREES, RIGHT? 
    Color color;       // turtle color
    Model model;       // reference back to the containing model
    bool dead = false; // flag used to remove turtle from the model
@@ -31,7 +31,7 @@ class Turtle implements Touchable {
       heading = rnd.nextInt(360);
       color = new Color(255, 255, 0, 50);
    }
-   
+  
    
    Turtle clone(Turtle parent) {
       Turtle t = new Turtle(model);
@@ -52,8 +52,38 @@ class Turtle implements Touchable {
    
    
    void forward(num distance) {
+     // if model world is set to wrap
+     if(this.model.wrapping){
       x = wrapX(x - sin(heading) * distance);
       y = wrapY(y + cos(heading) * distance);
+     }
+     // else bounce off world border
+     else{
+       x = bounceX(x - sin(heading) * distance);
+       y = bounceY(y - cos(heading) * distance);
+       
+     }
+     
+   }
+
+   bounceY(num ty) {
+   }
+
+   bounceX(num tx) {
+     if(tx > model.maxWorldX){
+//       heading = 
+           /*
+            * are these NetLogo turtle headings, or are they "normal" trig headings? is 0 up or right?
+            * if heading is 90, cos is 0, should come out to 270
+            * if heading is 45, cos is ~.5 should come out to 135
+            * if heading is 89, cos is ~1 should come out to 91
+            */
+     }
+     
+     
+     
+     // set new position
+     x = tx;
    }
    
       
@@ -122,6 +152,21 @@ class Turtle implements Touchable {
    
    Patch patchHere() {
       return model.patchAt(x, y);
+   }
+   
+   // returns a list of turtles here
+   // uses the patch primitive/method of the same name
+   List<Turtle> turtlesHere(){
+     Patch p = patchHere();
+     return p.turtlesHere();
+     
+   }
+   // @todo
+   List<Turtle> otherTurtlesHereWith(Map<String, dynamic> params){
+     List<Turtle> turtleshere = turtlesHere();
+     for (Turtle t in turtleshere){
+       
+     }
    }
    
    
