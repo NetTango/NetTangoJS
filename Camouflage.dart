@@ -56,7 +56,7 @@ class CamoTurtle extends Turtle {
    
    
    void tick() {
-      // do nothing on tick
+      // override to do nothing on tick
    }
    
    
@@ -79,11 +79,12 @@ class CamoTurtle extends Turtle {
       CamoTurtle copy = new CamoTurtle(model);
       copy.x = x;
       copy.y = y;
+      copy.color = this.color.clone();
       copy.color.red += (10 - Turtle.rnd.nextInt(20));
       copy.color.green += (10 - Turtle.rnd.nextInt(20));
       copy.color.blue += (10 - Turtle.rnd.nextInt(20));
       copy.right(Turtle.rnd.nextInt(360));
-      copy.forward(Turtle.rnd.nextDouble() * 0.5);
+      copy.forward(Turtle.rnd.nextDouble());
       model.addTurtle(copy);
    }
 }
