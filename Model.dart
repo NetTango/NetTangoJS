@@ -44,6 +44,9 @@ abstract class Model {
    // Used to generate unique turtle id numbers
    int TURTLE_ID = 0;
    
+   // wrapping boolean
+   bool wrapping = false;
+   
    static Random rnd = new Random();
    
    
@@ -63,7 +66,7 @@ abstract class Model {
    }
    
    
-   abstract void setup();
+   void setup();
    
    
    void initPatches() { 
@@ -107,6 +110,7 @@ abstract class Model {
    Turtle oneOfTurtles() {
       return turtles[rnd.nextInt(turtles.length)];
    }
+   
    
    
    void resize(int x, int y, int w, int h) {

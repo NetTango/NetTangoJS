@@ -1,3 +1,5 @@
+
+
 /*
  * NetTango
  *
@@ -18,6 +20,7 @@ class Color {
    
    Color clone() {
       return new Color(r, g, b, a);
+      print("color clone called");
    }
    
    

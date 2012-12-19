@@ -77,4 +77,23 @@
    
    void touchDrag(TouchEvent event) {
    }
+   
+   
+   
+   List<Turtle> turtlesHere(){
+     List<Turtle> turtleshere = new List<Turtle>();
+     // go through all turtles
+     for (Turtle t in model.turtles){
+       // put the ones that have this as their patch in the list
+       if(t.patchHere() == this){
+         turtleshere.add(t);
+         
+       }
+     }
+     
+     
+     return turtleshere;
+   }
+   
+   
 }
