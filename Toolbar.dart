@@ -11,6 +11,8 @@
  * material are those of the author(s) and do not necessarily reflect the views
  * of the National Science Foundation (NSF).
  */
+part of nettango;
+
 class Toolbar implements Touchable {
 
    // list of buttons contained in the toolbar

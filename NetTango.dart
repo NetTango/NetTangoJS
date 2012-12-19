@@ -1,4 +1,4 @@
-
+part of nettango;
 
 class NetTango extends TouchManager {
       
@@ -25,8 +25,6 @@ class NetTango extends TouchManager {
 
    
    NetTango(this.model) {
-      //width = window.innerWidth;
-      //height = window.innerHeight;
      
       // Canvas for drawing patches
       CanvasElement canvas = document.query("#patches");
@@ -51,8 +49,27 @@ class NetTango extends TouchManager {
    }
    
    
-/*
- * Show the toolbar on the screen
+   void resizeToFitScreen() {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      
+      model.resize(0, 0, width, height);
+
+      if (toolbar != null) {
+         int w = toolbar.width;
+         int h = toolbar.height;
+         toolbar.x = width ~/ 2 - w ~/ 2;
+         toolbar.y = height - h - 18;
+         CanvasElement canvas = document.query("#toolbar");
+         if (canvas != null) {
+            canvas.style.left = "${toolbar.x}px";
+            canvas.style.top = "${toolbar.y}px";
+         }
+      }
+   }
+   
+   
+/* Show the toolbar on the screen
  */
    void showToolbar() {
       toolbar = new Toolbar(this);

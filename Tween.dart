@@ -11,6 +11,8 @@
  * material are those of the author(s) and do not necessarily reflect the views
  * of the National Science Foundation (NSF).
  */
+part of nettango;
+
 const TWEEN_LINEAR = 0;
 const TWEEN_SINE2  = 1;
 const TWEEN_DECAY  = 2;

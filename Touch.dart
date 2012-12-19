@@ -11,6 +11,8 @@
  * material are those of the author(s) and do not necessarily reflect the views
  * of the National Science Foundation (NSF).
  */
+part of nettango;
+
 class TouchManager {
 
    // A list of touchable objects on the screen
@@ -40,6 +42,14 @@ class TouchManager {
       canvas.on.mouseUp.add((e) => mouseUp(e), true);
       canvas.on.mouseMove.add((e) => mouseMove(e), true);
       
+      // Events for iPad
+      canvas.on.touchStart.add((e) => touchDown(e), true);
+      canvas.on.touchMove.add((e) => touchDrag(e), true);
+      canvas.on.touchEnd.add((e) => touchUp(e), true);
+      
+      // Prevent screen from dragging on ipad
+      document.on.touchMove.add((e) => e.preventDefault(), true);
+
       // Attempt to connect to the microsoft surface input stream
       try {
          var socket = new WebSocket("ws://localhost:405");

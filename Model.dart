@@ -11,6 +11,8 @@
  * material are those of the author(s) and do not necessarily reflect the views
  * of the National Science Foundation (NSF).
  */
+part of nettango;
+
 abstract class Model {
    
    // Drawing context for turtles (TODO: use proper type)
@@ -121,6 +123,12 @@ abstract class Model {
       canvas.style.top = "${y}px";
 
       canvas = document.query("#turtles");
+      canvas.width = w;
+      canvas.height = h;
+      canvas.style.left = "${x}px";
+      canvas.style.top = "${y}px";
+      
+      canvas = document.query("#events");
       canvas.width = w;
       canvas.height = h;
       canvas.style.left = "${x}px";

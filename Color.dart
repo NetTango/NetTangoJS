@@ -13,6 +13,8 @@
  * material are those of the author(s) and do not necessarily reflect the views
  * of the National Science Foundation (NSF).
  */
+part of nettango;
+
 class Color {
    int r = 255, g = 255, b = 255, a = 255;
    
