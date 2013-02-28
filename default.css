@@ -16,7 +16,7 @@ body {
    background-color: #445368;
 }
 
-#patches {
+#drift-patches {
    background-image: url('images/img3.jpg');
    position: absolute;
    left: 50px;
@@ -24,31 +24,189 @@ body {
    z-index: 0;
 }
 
-#turtles {
+#drift-turtles {
    position: absolute;
    left: 50px;
    top: 50px;
    z-index: 1;
-   border: 1px solid black;
 }
 
-#events {
-   position: absolute;
-   z-index: 4;
-   left: 0px;
-   top: 0px;
-}
-
-#toolbar {
-   z-index: 3;
+.toolbar {
    background-color: rgb(22, 49, 79);
-   -moz-border-radius: 15px;
    border-radius: 15px;
    border: 2px solid white;
    position: absolute;
-   top: 640px;
-   left: 230px;
+   bottom: 20px;
+   left: 100px;
+   text-align: center;
+   padding: 5px;
+   width: 450px;
+   z-index: 2;
 }
+
+#tabs {
+   position: absolute;
+   left: 680px;
+   top: 50px;
+   width: 600px;
+   height: 600px;
+   border: 1px solid black;
+   background-color: #eee;
+   z-index: 4;
+}
+
+#plot {
+   position: absolute;
+   top: 50px;
+   right: 50px;
+   width: 500px;
+   height: 350px;
+   background-color: #333;
+   border: 1px solid black;
+}
+
+
+/* page transition animation */
+@-webkit-keyframes slide-down {
+   0%   { top: -1500px; }
+   100% { top: 0px; }
+}
+
+@-webkit-keyframes slide-up {
+   0%   { top: 0px; }
+   100% { top: -1500px; }
+}
+
+
+button {
+   outline: none;
+   border: none;
+   width: 30px;
+   height: 30px;
+   border-radius: 2px;
+   margin-left: 5px;
+   margin-right: 5px;
+   display: inline-block;
+}
+
+
+#restart-button {
+   margin-left: 5px;
+   margin-right: 70px;
+   background: url("images/restart.png") 0 0 no-repeat;
+}
+#restart-button:active { background-position: 3px 3px; }
+
+#stepback-button {
+   background: url("images/stepback.png") 0 0 no-repeat;
+}
+#stepback-button:active { background-position: 3px 3px; }
+
+#rewind-button {
+   background: url("images/rewind.png") 0 0 no-repeat;
+}
+#rewind-button:active { background-position: 3px 3px; }
+
+#play-button {
+   background: url("images/play.png") 0 0 no-repeat;
+}
+#play-button:active { background-position: 3px 3px; }
+
+#fastforward-button {
+   background: url("images/fastforward.png") 0 0 no-repeat;
+}
+#fastforward-button:active { background-position: 3px 3px; }
+
+
+#stepforward-button {
+   background: url("images/stepforward.png") 0 0 no-repeat;
+}
+#stepforward-button:active { background-position: 3px 3px; }
+
+#fullscreen-button {
+   margin-left: 70px;
+   margin-right: 5px;
+   margin-top: 5px;
+   background: url("images/fullscreen.png") 0 0 no-repeat;
+}
+#fullscreen-button:active { background-position: 3px 3px; }
+
+input[type="range"] {
+   -webkit-appearance:none;
+   -moz-apperance:none;
+   width:250px;
+   height:9px;
+   background-color: rgba(255, 255, 255, 0.5);
+   border-radius: 5px;
+   display: block;
+   margin-left: auto;
+   margin-right: auto;
+   margin-top: 10px;
+   margin-bottom: 5px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance:none !important;  
+   width:14px;
+   height:14px;
+   border-radius:7px;
+   background-color: white;
+}
+
+#tick-count {
+   color: white;
+   font-size: 12px;
+   font-family: sans-serif;
+   font-weight: 300;
+   text-align: left;
+   position: absolute;
+   bottom: 8px;
+   right: 15px;
+}
+
+
+/* define our own button style */
+.tool-button {
+   outline: none;
+   border: none;
+   width: 56px;
+   height: 56px;
+   border-radius: 12px;
+}
+
+
+/* settings button */
+#settings-button {
+   position: absolute;
+   bottom: 20px;
+   right: 20px;
+   background: url("images/settings.png") 0 0 no-repeat;
+}
+#settings-button:active { background-position: 3px 3px; }
+#settings-button:hover { background-color: rgba(255, 255, 255, 0.3); }
+
+
+/* home button */
+#home-button {
+   position: absolute;
+   bottom: 20px;
+   right: 160px;
+   background: url("images/home.png") 0 0 no-repeat;
+}
+#home-button:active { background-position: 3px 3px; }
+#home-button:hover { background-color: rgba(255, 255, 255, 0.3); }
+
+
+/* code tab button */
+#code-button {
+   position: absolute;
+   bottom: 20px;
+   right: 90px;
+   background: url("images/code.png") 0 0 no-repeat;
+}
+#code-button:active { background-position: 3px 3px; }
+#code-button:hover { background-color: rgba(255, 255, 255, 0.3); }
+
 
 #plots {
    z-index: 2;
