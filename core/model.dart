@@ -35,6 +35,9 @@ abstract class Model {
   // A list of patches
   List<Patch> patches;
   
+  // List of plots associated with this model
+  List<Plot> plots;
+  
   // tick count
   int ticks = 0;
   
@@ -81,6 +84,7 @@ abstract class Model {
     deadTurtles = new List<Turtle>();
     toolbar = new Toolbar(this);
     patches = new List<Patch>();
+    plots = new List<Plot>();
     
     CanvasElement canvas;
     
@@ -115,6 +119,10 @@ abstract class Model {
     setup();
     toolbar.update();
     draw();
+    for (Plot plot in plots) {
+      plot.clear();
+      plot.update(0);
+    }
   }
 
 
@@ -144,6 +152,13 @@ abstract class Model {
     // animate patches
     for (var patch in patches) {
       patch.tick();
+    }
+    
+    // update plots
+    if (ticks % 10 == 0) {
+      for (Plot plot in plots) {
+        plot.update(ticks);
+      }
     }
   }
    
@@ -236,6 +251,11 @@ abstract class Model {
         patches[j * worldWidth + i] = new Patch(this, i + minPatchX, j + minPatchY);
       }
     }
+  }
+  
+  
+  void addPlot(Plot plot) {
+    plots.add(plot);
   }
    
    
