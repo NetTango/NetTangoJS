@@ -14,6 +14,7 @@ library NetTango;
 import 'dart:html';
 import 'dart:math';
 import 'dart:json';
+import 'dart:svg' as svg;
 
 part 'agent.dart';
 part 'agentset.dart';
@@ -22,6 +23,7 @@ part 'expression.dart';
 part 'interpreter.dart';
 part 'model.dart';
 part 'patch.dart';
+part 'plot.dart';
 part 'toolbar.dart';
 part 'touch.dart';
 part 'turtle.dart';
