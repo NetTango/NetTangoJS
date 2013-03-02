@@ -15,12 +15,9 @@
    
    
    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />   
-   <link rel="stylesheet" href="default.css" />
-   <script type="text/javascript" src="http://www.google.com/jsapi"></script>
-   <script type="text/javascript">
-      google.load('visualization', '1', {packages: ['corechart']});
-    </script>
-   <script type="text/javascript" src="plot.js"></script>
+   <link rel="stylesheet" href="toolbar.css" />
+   <link rel="stylesheet" href="drift.css" />
+
    
    <script type="text/javascript">
       function sendMessage() {
@@ -78,8 +75,7 @@
       <block type="backward"></block>
    </xml>
    
-   <div id="tabs" style="background-color: black;">
-   </div>
+   <div id="drift-plot"></div>
    <!--
       <script type="text/javascript">
          Blockly.inject(document.getElementById('tabs'),
