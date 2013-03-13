@@ -38,6 +38,9 @@ abstract class Model {
   // List of plots associated with this model
   List<Plot> plots;
   
+  // Global variables and properties (defined for the model)
+  Map<String, dynamic> properties;
+  
   // tick count
   int ticks = 0;
   
@@ -52,7 +55,9 @@ abstract class Model {
   //-------------------------------------------
   int play_state = 0; 
   
-   
+  // Manages the animation events
+  Timer timer;
+
   // Size of a patch in pixels
   // TODO: Maybe patch size should vary according to world size rather than vice versa
   int patchSize = 40;
@@ -62,6 +67,9 @@ abstract class Model {
   int minPatchX = -12;
   int maxPatchY = 12;
   int minPatchY = -12;
+  
+  // should turtles wrap?
+  bool wrap = true;
   
   // Used to generate unique agent id numbers
   int AGENT_ID = 1;
@@ -85,6 +93,7 @@ abstract class Model {
     toolbar = new Toolbar(this);
     patches = new List<Patch>();
     plots = new List<Plot>();
+    properties = new Map<String, dynamic>();
     
     CanvasElement canvas;
     
@@ -100,7 +109,7 @@ abstract class Model {
       pctx = canvas.getContext("2d");
     }
  
-    resize(width, height);
+    resize(width, height);    
   }
   
 
@@ -168,6 +177,7 @@ abstract class Model {
  */
   void play(num speedup) {
     play_state = speedup;
+    toolbar.update();
     animate();
   }
    
@@ -177,6 +187,7 @@ abstract class Model {
  */
   void pause() {
     play_state = 0;
+    toolbar.update();
   }
   
   
@@ -238,7 +249,7 @@ abstract class Model {
         tick();
       }
       draw();
-      window.setTimeout(animate, 20);
+      new Timer(const Duration(milliseconds : 30), animate);
     }
   }
 
@@ -302,13 +313,12 @@ abstract class Model {
  
    
   void drawTurtles(var ctx) {
+    ctx.clearRect(0, 0, width, height);
     num cx = (0.5 - minPatchX) * patchSize;
     num cy = (0.5 - minPatchY) * patchSize;
     ctx.save();
     ctx.translate(cx, cy);
     ctx.scale(patchSize, -patchSize);
-      
-    ctx.clearRect(minWorldX, minWorldY - 1, worldWidth + 1, worldHeight + 1);
     for (var turtle in turtles) {
       ctx.save();
       ctx.translate(turtle.x, turtle.y);
@@ -355,6 +365,18 @@ abstract class Model {
   num screenToWorldY(num sx, num sy) {
     num cy = (0.5 - minPatchY) * patchSize;
     return (cy - sy) / patchSize;      
+  }
+  
+  
+  num worldToScreenX(num wx, num wy) {
+    num cx = (0.5 - minPatchX) * patchSize;
+    return wx * patchSize + cx;
+  }
+  
+  
+  num worldToScreenY(num wx, num wy) {
+    num cy = (0.5 - minPatchY) * patchSize;
+    return wy * patchSize * -1 + cy;
   }
    
    

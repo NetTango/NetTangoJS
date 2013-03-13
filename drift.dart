@@ -35,7 +35,13 @@ class DriftModel extends Model {
     plot.addPen(pen);
     
     pen = new Pen("grass", "green");
-    pen.updater = (int ticks) { return 50.0; };
+    pen.updater = (int ticks) {
+      double count = 0.0;
+      for (Patch patch in patches) {
+        count += patch["plant-energy"];
+      }
+      return count / patches.length;
+    };
     plot.addPen(pen);
     plot.minY = 0;
     plot.maxY = 100;
@@ -63,12 +69,20 @@ class DriftModel extends Model {
       ["forward", 0.1],
       ["right", ["random", 20] ],
       ["left", ["random", 20] ],
-      ["set", "energy", ["-", "energy", 0.01] ],
-      ["ask", ["patch-here"], [ [ "set", "color-blue", 100 ], [ "set", "color-alpha", 125 ] ] ],
-      ["if", [ "<=", "energy", 0 ], [ "die" ] ],
-      ["if", [ ">", "energy", 0.9],
-        ["if", [ ">", ["random", 100], 95 ], [ ["set", "energy", 0.5 ], [ "hatch" ] ] ]
-      ]
+      ["set", "energy", ["-", "energy", 1] ],
+      ["if", [ "<=", "energy", 0], [ "die"] ],
+      ["ask", ["patch-here"], [
+          [ "if", [ ">", "plant-energy", 0 ], [
+              [ "set", "plant-energy", [ "-", "plant-energy", 10 ] ],
+              [ "set", "energy", [ "+", "energy", 2] ]
+          ] ]
+      ] ],
+      ["if", [ ">", "energy", 90], [
+          ["if", [ ">", ["random", 100], 95 ], [
+              ["set", "energy", 50 ],
+              [ "hatch" ]
+          ] ]
+      ] ]
     ]
     """;
     Expression behavior = new Expression(parse(behaviors));
@@ -76,14 +90,27 @@ class DriftModel extends Model {
     
     for (int i=0; i<TURTLE_COUNT; i++) {
       Turtle t = new Turtle(this);
-      t["energy"] = 0.5 + Turtle.rnd.nextDouble() * 0.5;
+      t["energy"] = 100;
       t.color = colors[i % 5].clone();
       t.setBehavior(behavior);
       addTurtle(t);
     }
     
+    behaviors = """
+    [
+      [ "set", "plant-energy", [ "+", "plant-energy", 1 ] ],
+      [ "if", [">", "plant-energy", 100 ], [
+          [ "set", "plant-energy", 100 ]
+      ] ],
+      [ "set", "color-green", "plant-energy" ]
+    ]
+    """;
+    behavior = new Expression(parse(behaviors));
+    
     for (Patch patch in patches) {
-      patch["energy"] = 100;
+      patch.color.setColor(0, 100, 0, 255);
+      patch.setBehavior(behavior);
+      patch["plant-energy"] = 100;
     }
   }
 }

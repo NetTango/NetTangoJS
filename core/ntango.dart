@@ -15,6 +15,7 @@ import 'dart:html';
 import 'dart:math';
 import 'dart:json';
 import 'dart:svg' as svg;
+import 'dart:async';
 
 part 'agent.dart';
 part 'agentset.dart';

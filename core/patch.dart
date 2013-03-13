@@ -22,9 +22,6 @@ class Patch extends Agent implements Touchable {
     color = new Color(0, 100, 0, 0);
     dirty = true;
   }
-   
-   
-  void tick() {  }
 
    
   void draw(var ctx) {

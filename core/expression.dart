@@ -29,9 +29,13 @@ abstract class Expression {
    * a "block", or one of the built-in control structures
    */
   factory Expression(var exp) {
+    
+    if (exp == null) {
+      return null;
+    }
 
     // Variable?
-    if (exp is String) {
+    else if (exp is String) {
       return new Variable(exp);
     }
     
@@ -41,14 +45,11 @@ abstract class Expression {
     }
 
     List l = exp as List;
-
-    /*
-    if (l[0] == "$repeat") {
-      return new RepeatStatement(l);
-    }
-    */
     
-    if (l[0] == "set") {
+    if (l.length == 0) {
+      return new Block(l);  // empty block
+    } 
+    else if (l[0] == "set") {
       return new SetStatement(l);
     }
     else if (l[0] == "if") {
@@ -56,6 +57,12 @@ abstract class Expression {
     }
     else if (l[0] == "ask") {
       return new AskStatement(l);
+    }
+    else if (l[0] == "repeat") {
+      return new RepeatStatement(l);
+    }
+    else if (l[0] == "forever") {
+      return new ForeverStatement(l);
     }
     else if (l[0] is String) {
       return new Statement(l);
@@ -183,10 +190,19 @@ class SetStatement extends Statement {
 }
 
 
+abstract class ControlStatement extends Statement {
+  
+  ControlStatement(List l) : super(l);
+  
+  // called after a control statement has been executed 
+  void onComplete(Interpreter interp) { }
+}
+
+
 /**
  * 1-way conditional
  */
-class IfStatement extends Statement {
+class IfStatement extends ControlStatement {
   
   IfStatement(List l) : super(l);
   
@@ -194,6 +210,44 @@ class IfStatement extends Statement {
     if (args[0].eval(interp)) {
       interp.pushFrame(args[1], null);
     }
+  }
+}
+
+
+/**
+ * Counting loop
+ */
+class RepeatStatement extends ControlStatement {
+  
+  int count = null;
+  
+  RepeatStatement(List l) : super(l);
+  
+  dynamic eval(Interpreter interp) {
+    if (count == null) {
+      count = args[0].eval(interp);
+    }
+    if (count > 0) {
+      interp.ip--;  // FIXME: This is terrible!
+      interp.pushFrame(args[1], null);
+      count--;
+    } else {
+      count = null;
+    }
+  }
+}
+
+
+/**
+ * Infinite loop
+ */
+class ForeverStatement extends ControlStatement {
+  
+  ForeverStatement(List l) : super(l);
+  
+  dynamic eval(Interpreter interp) {
+    interp.ip--;  // FIXME: This is terrible!
+    interp.pushFrame(args[0], null);
   }
 }
 

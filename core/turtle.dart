@@ -45,6 +45,7 @@ class Turtle extends Agent implements Touchable {
     t.color = color.clone();
     t.dead = false;
     t.breed = breed;
+    t.setBehavior(interp.program);
     
     // copy all of the properties
     for (String key in _props.keys) {
@@ -55,15 +56,25 @@ class Turtle extends Agent implements Touchable {
    
    
   void setXY(num x, num y) {
-    this.x = wrapX(x);
-    this.y = wrapY(y);
+    if (model.wrap) {
+      this.x = wrapX(x);
+      this.y = wrapY(y);
+    } else {
+      this.x = x;
+      this.y = y;
+    }
   }
    
    
   void forward(num distance) {
     // if model world is set to wrap
-    x = wrapX(x - sin(heading) * distance);
-    y = wrapY(y + cos(heading) * distance);
+    if (model.wrap) {
+      x = wrapX(x - sin(heading) * distance);
+      y = wrapY(y + cos(heading) * distance);
+    } else {
+      x -= sin(heading) * distance;
+      y += cos(heading) * distance;
+    }
   }
   
      

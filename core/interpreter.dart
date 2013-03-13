@@ -52,6 +52,11 @@ class Interpreter {
     commands["<="] = _doComp;
     commands[">="] = _doComp;
   }
+  
+  
+  void loadJSON(String json) {
+    load(new Expression(parse(json)));
+  }
 
 
   void load(Expression expression) {
@@ -70,12 +75,56 @@ class Interpreter {
 
   
   dynamic getVariable(String name) {
-    return (agent != null)? agent[name] : null;
+    
+    // check the current agent
+    if (agent != null && agent.isDefined(name)) {
+      return agent[name];
+    }
+    
+    // search backward through the stack until we find the variable
+    for (int i=stack.length-1; i >= 0; i--) {
+      StackFrame frame = stack[i];
+      if (frame.agents != null) {
+        Agent a = frame.agents.curr();
+        if (a != null && a.isDefined(name)) {
+          return a[name];
+        }
+      }
+    }
+    
+    // try for a global property if all else fails
+    if (owner.model.properties.containsKey(name)) {
+      return owner.model.properties[name];
+    } else {
+      throw "Undefined variable: $name";
+    }
   }
   
   
   void setVariable(String name, var value) {
-    if (agent != null) agent[name] = value;
+    
+    if (agent != null && agent.isDefined(name)) {
+      agent[name] = value;
+      return;
+    }
+    
+    // search backward through the stack until we find the variable
+    for (int i=stack.length-1; i >= 0; i--) {
+      StackFrame frame = stack[i];
+      if (frame.agents != null) {
+        Agent a = frame.agents.curr();
+        if (a != null && a.isDefined(name)) {
+          a[name] = value;
+          return;
+        }
+      }
+    }
+    
+    if (owner.model.properties.containsKey(name)) {
+      owner.model.properties[name] = value;
+    } else {
+      throw "Undefined variable: $name";
+    }
   }
 
 
@@ -187,7 +236,7 @@ class Interpreter {
     for (var arg in args) {
       if (arg is num) sum += arg;
     }
-    return 0;
+    return sum;
   }
   
   bool _doComp(String command, List args) {

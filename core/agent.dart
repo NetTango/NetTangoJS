@@ -74,6 +74,18 @@ abstract class Agent {
   
   
   /*
+   * Is the named variable defined for this agent?
+   */
+  bool isDefined(String name) {
+    return (name == "color-red" ||
+            name == "color-green" ||
+            name == "color-blue" ||
+            name == "color-alpha" ||
+            _props.containsKey(name));
+  }
+  
+  
+  /*
    * Set the agent's behavior (program code)
    */
   void setBehavior(Expression behavior) {

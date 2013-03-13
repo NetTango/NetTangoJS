@@ -40,13 +40,10 @@ class Toolbar {
   
   
   void playPause() {
-    ButtonElement el = document.query("$id #play-button");
     if (model.isPaused) {
       model.play(1);
-      if (el != null) el.style.backgroundImage = "url('images/pause.png')";
     } else {
       model.pause();
-      if (el != null) el.style.backgroundImage = "url('images/play.png')";
     }   
   }
 
@@ -55,6 +52,15 @@ class Toolbar {
     Element el = document.query("$id #tick-count");
     if (el != null) {
       el.innerHtml = "tick: ${model.ticks}";
-    }    
+    }
+    ButtonElement button = document.query("$id #play-button");
+    if (button != null) {
+      bool paused = button.style.backgroundImage.contains('images/play.png');
+      if (model.isPaused && !paused) {
+        button.style.backgroundImage = "url('images/play.png')";
+      } else if (!model.isPaused && paused) {
+        button.style.backgroundImage = "url('images/pause.png')";
+      }
+    }
   }
 }
