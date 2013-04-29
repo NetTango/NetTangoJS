@@ -263,15 +263,15 @@ class Contact {
   
   Contact.fromMouse(MouseEvent mouse) {
     id = -1;
-    touchX = mouse.clientX;
-    touchY = mouse.clientY;
+    touchX = mouse.client.x.toDouble();
+    touchY = mouse.client.y.toDouble();
     finger = true;
   }
   
   Contact.fromTouch(Touch touch) {
     id = touch.identifier;
-    touchX = touch.clientX;
-    touchY = touch.clientY;
+    touchX = touch.client.x.toDouble();
+    touchY = touch.client.y.toDouble();
     finger = true;
   }
   
