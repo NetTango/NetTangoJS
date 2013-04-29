@@ -67,7 +67,7 @@ class Plot {
     height = container.clientHeight;
     
     var plot = new svg.SvgSvgElement();
-    plot.attributes = { "width": width, "height": height, "version": "1.1" };
+    plot.attributes = { "width": "$width", "height": "$height", "version": "1.1" };
     plot.nodes.add(_drawWindow());
     plot.nodes.add(_drawXAxis());
     plot.nodes.add(_drawYAxis());
@@ -114,8 +114,8 @@ class Plot {
     num h = plotToScreenY(minY) - y;
     rect.attributes = {
       "fill": "white",
-      "fill-opacity" : 0.7,
-      "x": x, "y": y, "width": w, "height": h };
+      "fill-opacity" : "0.7",
+      "x": "$x", "y": "$y", "width": "$w", "height": "$h" };
     return rect;
   }
 
@@ -131,14 +131,14 @@ class Plot {
       var line = new svg.PolylineElement();
       line.attributes = {
         "stroke" : pen.color,
-        "stroke-width" : 2,
+        "stroke-width" : "2",
         "fill": "none" };
     
       String points = "";
       for (List row in rows) {
         num x = plotToScreenX(row[0]);
         num y = plotToScreenY(row[p+1]);
-        points = points.concat("$x,$y ");
+        points = points + "$x,$y ";
       }
       line.attributes["points"] = points;
       g.nodes.add(line);
@@ -154,7 +154,7 @@ class Plot {
     var t = new svg.TextElement();
     t.text = title;
     t.attributes = {
-      "x" : plotToScreenX(minX), "y" : 30,
+      "x" : "${plotToScreenX(minX)}", "y" : "30",
       "font-weight" : "bold",
       "text-anchor" : "start",
       "font-size" : "12pt"
@@ -183,11 +183,11 @@ class Plot {
       
       var yLabel = new svg.TextElement();
       yLabel.text = "${i.toInt()}";
-      yLabel.attributes = { "x" : x1 - 10, "y" : y1 + 5 };
+      yLabel.attributes = { "x" : "${x1 - 10}", "y" : "${y1 + 5}" };
       labels.nodes.add(yLabel);
       
       var line = new svg.LineElement();
-      line.attributes = { "x1": x1, "y1": y1, "x2": x2, "y2": y1, "stroke": "#999" };
+      line.attributes = { "x1": "$x1", "y1": "$y1", "x2": "$x2", "y2": "$y1", "stroke": "#999" };
       labels.nodes.add(line);
     }
     
@@ -212,8 +212,8 @@ class Plot {
       var t = new svg.TextElement();
       t.text = labelX;
       t.attributes = {
-        "x" : plotToScreenX((minX + maxX) / 2),
-        "y" : plotToScreenY(minY) + 36,
+        "x" : "${plotToScreenX((minX + maxX) / 2)}",
+        "y" : "${plotToScreenY(minY) + 36}",
         "font-weight" : "bold",
       };
       labels.nodes.add(t);
@@ -224,8 +224,8 @@ class Plot {
       var xLabel = new svg.TextElement();
       xLabel.text = "${i.toInt()}";
       xLabel.attributes = {
-        "x": plotToScreenX(i),
-        "y": plotToScreenY(minY) + 15,
+        "x": "${plotToScreenX(i)}",
+        "y": "${plotToScreenY(minY) + 15}",
       };
       labels.nodes.add(xLabel);
     }
