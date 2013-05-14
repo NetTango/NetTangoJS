@@ -68,9 +68,6 @@ abstract class Model {
   int maxPatchY = 12;
   int minPatchY = -12;
   
-  // should turtles wrap?
-  bool wrap = true;
-  
   // Used to generate unique agent id numbers
   int AGENT_ID = 1;
    
@@ -307,7 +304,7 @@ abstract class Model {
    
    
   void draw() {
-    drawPatches(pctx);
+    if (pctx != null) drawPatches(pctx);
     drawTurtles(tctx);
   }
  
