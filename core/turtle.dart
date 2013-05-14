@@ -17,11 +17,24 @@ class Turtle extends Agent implements Touchable {
   
   static Random rnd = new Random();
   
-  num x = 0.0, y = 0.0;     // turtle coordinates in world space
-  num size = 1.0;           // turtle size
-  num heading = 0.0;        // turtle heading in radians 
-  bool dead = false;        // flag used to remove turtle from the model
-  String breed = "turtle";  // TODO needs something more sophisticated
+  /* turtle coordinates in world space */
+  num x = 0.0, y = 0.0;
+  
+  /* turtle size */
+  num size = 1.0;
+  
+  /* turtle heading in radians */
+  num heading = 0.0;
+  
+  /* does this turtle wrap around the edges of the model? */
+  bool wrap = true;
+  
+  /* flag used to remove dead turtles from the model */
+  bool dead = false;
+  
+  /* TODO: probably need something more sophisticated */
+  String breed = "turtle";
+  
 
   
   Turtle(Model model) : super(model) {
@@ -56,7 +69,7 @@ class Turtle extends Agent implements Touchable {
    
    
   void setXY(num x, num y) {
-    if (model.wrap) {
+    if (wrap) {
       this.x = wrapX(x);
       this.y = wrapY(y);
     } else {
@@ -67,8 +80,7 @@ class Turtle extends Agent implements Touchable {
    
    
   void forward(num distance) {
-    // if model world is set to wrap
-    if (model.wrap) {
+    if (wrap) {
       x = wrapX(x - sin(heading) * distance);
       y = wrapY(y + cos(heading) * distance);
     } else {
