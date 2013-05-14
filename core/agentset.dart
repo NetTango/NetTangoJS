@@ -1,8 +1,6 @@
 /*
  * NetTango
  * Northwestern University
- * michael-horn@northwestern.edu
- * Copyright 2013, Michael S. Horn and Uri Wilensky
  *
  * This project was funded in part by the National Science Foundation.
  * Any opinions, findings and conclusions or recommendations expressed in this
@@ -13,17 +11,18 @@ part of NetTango;
 
 
 /**
- * Collection of agents
+ * A collection of agents
  */
 class AgentSet {
 
-  // List of agents  
+
+  /* List of agents */
   List<Agent> agents = new List<Agent>();
   
-  // Internal iterator count
-  int index = 0;
+  /* Internal iterator count */
+  int _index = 0;
   
-  // Random number generator
+  /* Random number generator */
   Random rand = new Random();
 
   
@@ -58,7 +57,7 @@ class AgentSet {
    * Resets the iterator to the first agent
    */
   void reset() {
-    index = 0;
+    _index = 0;
   }
   
   
@@ -67,7 +66,7 @@ class AgentSet {
    * null if there are no remaining agents. (TODO Randomize order)
    */
   Agent next() {
-    index++;
+    _index++;
     return curr();
   }
   
@@ -77,10 +76,10 @@ class AgentSet {
    * if there are no remaining agents.
    */
   Agent curr() {
-    if (index >= agents.length) {
+    if (_index >= agents.length) {
       return null;
     } else {
-      return agents[index];
+      return agents[_index];
     }
   }
   
@@ -89,7 +88,7 @@ class AgentSet {
    * Iterator is complete
    */
   bool get hasNext {
-    return (index < agents.length - 1);
+    return (_index < agents.length - 1);
   }
   
 
@@ -106,7 +105,7 @@ class AgentSet {
    */
   void clear() {
     agents.clear();
-    index = 0;
+    _index = 0;
   }
   
   

@@ -1,8 +1,6 @@
 /*
  * NetTango
  * Northwestern University
- * michael-horn@northwestern.edu
- * Copyright 2013, Michael S. Horn and Uri Wilensky
  *
  * This project was funded in part by the National Science Foundation.
  * Any opinions, findings and conclusions or recommendations expressed in this
@@ -13,10 +11,11 @@ part of NetTango;
 
 
 /**
- * Fundamental syntactic building block of a program
+ * Fundamental syntactic building block of a NetTango program
  * (similar to a lisp s-expression).
  */
 abstract class Expression {
+
 
   /**
    * Default constructor

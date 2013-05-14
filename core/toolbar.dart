@@ -1,8 +1,6 @@
 /*
  * NetTango
  * Northwestern University
- * michael-horn@northwestern.edu
- * Copyright 2013, Michael S. Horn and Uri Wilensky
  *
  * This project was funded in part by the National Science Foundation.
  * Any opinions, findings and conclusions or recommendations expressed in this
@@ -14,9 +12,11 @@ part of NetTango;
 
 class Toolbar {
 
+  /* Model that this toolbar controls */  
+  Model model;
   
-  Model model; // used to control the model
-  String id; // html id for toolbar div tag
+  /* DIV tag id that the toolbar appears in */
+  String id;
 
    
   Toolbar(this.model) {
@@ -57,9 +57,9 @@ class Toolbar {
     if (button != null) {
       bool paused = button.style.backgroundImage.contains('images/play.png');
       if (model.isPaused && !paused) {
-        button.style.backgroundImage = "url('images/play.png')";
+        button.style.backgroundImage = "url('../images/play.png')";
       } else if (!model.isPaused && paused) {
-        button.style.backgroundImage = "url('images/pause.png')";
+        button.style.backgroundImage = "url('../images/pause.png')";
       }
     }
   }

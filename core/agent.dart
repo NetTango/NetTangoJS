@@ -1,8 +1,6 @@
 /*
  * NetTango
  * Northwestern University
- * michael-horn@northwestern.edu
- * Copyright 2013, Michael S. Horn and Uri Wilensky
  *
  * This project was funded in part by the National Science Foundation.
  * Any opinions, findings and conclusions or recommendations expressed in this
@@ -12,30 +10,42 @@
 part of NetTango;
 
 
+/**
+ * Abstract baseclass for Turtles and Patches
+ */
 abstract class Agent {
   
-  int id;               // all agents have a unique id number
-  Model model;          // reference to the containing model
-  Color color;          // agent color
-  Map _props;           // user-defined agent variables (e.g. turtles-own)
-  Interpreter interp;   // runtime interpreter
-  bool dirty = false;   // repaint this agent?
+  /* all agents have a (model) unique id number */
+  int id;
+  
+  /* reference to the containing model */
+  Model model;
+  
+  /* agent's color */
+  Color color = new Color(255, 255, 0, 255);
+  
+  /* agent-specific variables (e.g. turtles-own) */
+  Map _props = new Map();
+  
+  /* Runtime behavior interpreter */
+  Interpreter interp;
+  
+  /* repaint this agent? */
+  bool dirty = false;
 
-  // implementation of interpreter commands
+  /* Implementation of interpreter commands */
   Map<String, Function> commands = new Map<String, Function>();
 
 
   
   Agent(this.model) {
     id = model.nextAgentId();
-    color = new Color(255, 255, 0, 255);
-    _props = new Map();
     interp = new Interpreter(this);
   }
 
 
   /*
-   * Access a property
+   * Access an agent-specific property
    */
   dynamic operator[](String key) {
     if (key == "color-red") {
@@ -52,7 +62,7 @@ abstract class Agent {
 
   
   /*
-   * Set a property
+   * Set an agent-specific property
    */
   void operator[]=(String key, var value) {
     if (key == "color-red") {
@@ -91,14 +101,15 @@ abstract class Agent {
   void setBehavior(Expression behavior) {
     interp.load(behavior);
   }
-   
+
   
   /*
    * This gets called every clock tick for every agent
    */
   void tick() {
     interp.restart();
-    while(interp.step()) { }
+    while (interp.step()) {
+    }
   }
 
   
@@ -106,4 +117,5 @@ abstract class Agent {
    * This gets called every clock tick for every agent
    */
   void draw(CanvasRenderingContext2D ctx);
+  
 }

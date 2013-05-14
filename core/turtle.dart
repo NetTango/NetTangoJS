@@ -1,8 +1,6 @@
 /*
  * NetTango
  * Northwestern University
- * michael-horn@northwestern.edu
- * Copyright 2013, Michael S. Horn and Uri Wilensky
  *
  * This project was funded in part by the National Science Foundation.
  * Any opinions, findings and conclusions or recommendations expressed in this
@@ -156,19 +154,20 @@ class Turtle extends Agent implements Touchable {
   
   // returns a list of turtles here
   // uses the patch primitive/method of the same name
-  List<Turtle> turtlesHere(){
+  AgentSet turtlesHere() {
     Patch p = patchHere();
     return p.turtlesHere();
-    
   }
   
   
   // @todo
-  List<Turtle> otherTurtlesHereWith(Map<String, dynamic> params){
-    List<Turtle> turtleshere = turtlesHere();
+  AgentSet otherTurtlesHereWith(Map<String, dynamic> params) {
+    AgentSet turtleshere = turtlesHere();
+    AgentSet result = new AgentSet();
     for (Turtle t in turtleshere){
-      
+      // TODO
     }
+    return result;
   }
   
   

@@ -1,8 +1,6 @@
 /*
  * NetTango
  * Northwestern University
- * michael-horn@northwestern.edu
- * Copyright 2013, Michael S. Horn and Uri Wilensky
  *
  * This project was funded in part by the National Science Foundation.
  * Any opinions, findings and conclusions or recommendations expressed in this
@@ -14,23 +12,17 @@ part of NetTango;
 
 class TouchManager {
 
-  // A list of touchable objects on the screen
-  static var touchables;
+  /* A list of touchable objects on the screen */
+  static var touchables = new List<Touchable>();
    
-  // Bindings from event IDs to touchable objects
-  static var touch_bindings;
+  /* Bindings from event IDs to touchable objects */
+  static var touch_bindings = new Map<int, Touchable>();
    
-  // Touch event frame from microsoft surface
-  var pframe = null;
-   
-  // Is the mouse currently down
+  /* Is the mouse currently down */
   bool mdown = false;
    
    
-  TouchManager() {
-    touchables = new List<Touchable>();
-    touch_bindings = new Map<int, Touchable>();
-  }
+  TouchManager();
    
 
 /*
@@ -48,18 +40,6 @@ class TouchManager {
       
     // Prevent screen from dragging on ipad
     document.onTouchMove.listen((e) => e.preventDefault());
-
-      // Attempt to connect to the microsoft surface input stream
-//      try {
-//         var socket = new WebSocket("ws://localhost:405");
-//         socket.on.open.add((evt) => print("connected to surface."));
-//         socket.on.message.add((evt) => processTouches(evt.data));
-//         socket.on.error.add((evt) => print("error in surface connection."));
-//         socket.on.close.add((evt) => print("surface connection closed."));
-//      }
-//      catch (x) {
-//         print("unable to connect to surface.");
-//      }
    }
    
    
@@ -88,7 +68,7 @@ class TouchManager {
  * Find a touchable object that intersects with the given touch event
  */
   Touchable findTouchTarget(Contact tp) {
-    for (var t in touchables) {
+    for (Touchable t in touchables) {
       if (t.containsTouch(tp)) {
         return t;
       }
@@ -101,7 +81,7 @@ class TouchManager {
  * Convert mouseUp to touchUp events
  */
   void doMouseUp(MouseEvent evt) {
-    var target = touch_bindings[-1];
+    Touchable target = touch_bindings[-1];
     if (target != null) {
       target.touchUp(new Contact.fromMouse(evt));
       touch_bindings[-1] = null;
@@ -111,11 +91,11 @@ class TouchManager {
    
    
 /*
- * Convert mouseDown to touchUp events
+ * Convert mouseDown to touchDown events
  */
   void doMouseDown(MouseEvent evt) {
     Contact t = new Contact.fromMouse(evt);
-    var target = findTouchTarget(t);
+    Touchable target = findTouchTarget(t);
     if (target != null) {
       if (target.touchDown(t)) {
         touch_bindings[-1] = target;
@@ -131,7 +111,7 @@ class TouchManager {
   void doMouseMove(MouseEvent evt) {
     if (mdown) {
       Contact t = new Contact.fromMouse(evt);
-      var target = touch_bindings[-1];
+      Touchable target = touch_bindings[-1];
       if (target != null) {
         target.touchDrag(t);
       } else {
@@ -147,7 +127,7 @@ class TouchManager {
   void doTouchDown(var tframe) {
     for (Touch touch in tframe.changedTouches) {
       Contact t = new Contact.fromTouch(touch);
-      var target = findTouchTarget(t);
+      Touchable target = findTouchTarget(t);
       if (target != null) {
         if (target.touchDown(t)) {
           touch_bindings[t.id] = target;
@@ -160,7 +140,7 @@ class TouchManager {
   void doTouchUp(var tframe) {
     for (Touch touch in tframe.changedTouches) {
       Contact t = new Contact.fromTouch(touch);
-      var target = touch_bindings[t.id];
+      Touchable target = touch_bindings[t.id];
       if (target != null) {
         target.touchUp(t);
         touch_bindings[t.id] = null;
@@ -175,7 +155,7 @@ class TouchManager {
   void doTouchDrag(var tframe) {
     for (Touch touch in tframe.changedTouches) {
       Contact t = new Contact.fromTouch(touch);
-      var target = touch_bindings[t.id];
+      Touchable target = touch_bindings[t.id];
       if (target != null) {
         target.touchDrag(t);
       } else {
@@ -186,42 +166,6 @@ class TouchManager {
       }
     }
   }
-   
-
-/*
- * Process JSON touch events from microsoft surface
- */
-//   void processTouches(data) {
-//      var frame = new JsonObject.fromJsonString(data);
-//      
-//      var changed = [];
-//      bool down = false;
-//      bool drag = false;
-//      bool up = false;
-//      
-//      for (var t in frame.touches) {
-//         if (t.down) {
-//            changed.add(new TouchEvent.fromJSON(t));
-//            down = true;
-//         }
-//         else if (t.drag) {
-//            changed.add(new TouchEvent.fromJSON(t));
-//            drag = true;
-//         }
-//         else if (t.up) {
-//           print("t.up");
-//            changed.add(new TouchEvent.fromJSON(t));
-//            up = true;
-//         }
-//      }
-//      
-//      frame.changedTouches = changed;
-//      if (down) touchDown(frame);
-//      if (drag) touchDrag(frame);
-//      if (up) touchUp(frame);
-//      
-//      pframe = frame;
-//   }
 }
 
 
