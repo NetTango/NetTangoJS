@@ -1,0 +1,42 @@
+<!DOCTYPE html> 
+<html> 
+<head> 
+   <title>NetTango: Drift</title>
+   <meta charset="utf-8">
+   <meta name="apple-mobile-web-app-capable" content="yes">
+   <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+   <link rel="stylesheet" href="../css/toolbar.css">
+   <link rel="stylesheet" href="drift.css">
+</head> 
+<body>
+
+   <!-- WORLD VIEW -->   
+   <canvas id="drift-patches" width="600" height="600"></canvas>
+   <canvas id="drift-turtles" width="600" height="600"></canvas>
+
+   
+   <!-- TOOLBAR -->
+   <div id="drift-toolbar" class="toolbar">
+      <div>
+         <button id="restart-button"></button>
+         <button id="stepback-button"></button>
+         <button id="rewind-button"></button>
+         <button id="play-button"></button>
+         <button id="fastforward-button"></button>
+         <button id="stepforward-button"></button>
+         <button id="fullscreen-button"></button>
+      </div>
+      <input type="range" id="ticker" min="0" max="1000" step="1" value="0">
+      <div id="tick-count">tick: 0</div>
+   </div>
+   
+   
+   <!-- PLOT -->   
+   <div id="drift-plot"></div>
+
+   
+   <!-- DART SCRIPT -->    
+   <script src="drift.dart" type="application/dart"></script>
+   <script src="../core/dart.js"></script>
+</body>
+</html>
