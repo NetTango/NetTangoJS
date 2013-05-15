@@ -20,7 +20,9 @@ class TouchManager {
    
   /* Is the mouse currently down */
   bool mdown = false;
-   
+  
+  /* Element that receives touch or mouse events */
+  Element parent = null;
    
   TouchManager();
    
@@ -29,6 +31,8 @@ class TouchManager {
  * The main class must call this method to enable mouse and touch input
  */ 
   void registerEvents(Element element) {
+    parent = element;
+    
     element.onMouseDown.listen((e) => doMouseDown(e));
     element.onMouseUp.listen((e) => doMouseUp(e));
     element.onMouseMove.listen((e) => doMouseMove(e));
@@ -126,7 +130,7 @@ class TouchManager {
    
   void doTouchDown(var tframe) {
     for (Touch touch in tframe.changedTouches) {
-      Contact t = new Contact.fromTouch(touch);
+      Contact t = new Contact.fromTouch(touch, parent);
       Touchable target = findTouchTarget(t);
       if (target != null) {
         if (target.touchDown(t)) {
@@ -139,7 +143,7 @@ class TouchManager {
    
   void doTouchUp(var tframe) {
     for (Touch touch in tframe.changedTouches) {
-      Contact t = new Contact.fromTouch(touch);
+      Contact t = new Contact.fromTouch(touch, parent);
       Touchable target = touch_bindings[t.id];
       if (target != null) {
         target.touchUp(t);
@@ -154,7 +158,7 @@ class TouchManager {
    
   void doTouchDrag(var tframe) {
     for (Touch touch in tframe.changedTouches) {
-      Contact t = new Contact.fromTouch(touch);
+      Contact t = new Contact.fromTouch(touch, parent);
       Touchable target = touch_bindings[t.id];
       if (target != null) {
         target.touchDrag(t);
@@ -207,15 +211,24 @@ class Contact {
   
   Contact.fromMouse(MouseEvent mouse) {
     id = -1;
-    touchX = mouse.client.x.toDouble();
-    touchY = mouse.client.y.toDouble();
+    touchX = mouse.offset.x.toDouble();
+    touchY = mouse.offset.y.toDouble();
     finger = true;
   }
   
-  Contact.fromTouch(Touch touch) {
+  Contact.fromTouch(Touch touch, Element parent) {
+    num left = window.pageXOffset;
+    num top = window.pageYOffset;
+    
+    if (parent != null) {
+      Rect box = parent.getBoundingClientRect();
+      left += box.left;
+      top += box.top;
+    }
+    
     id = touch.identifier;
-    touchX = touch.client.x.toDouble();
-    touchY = touch.client.y.toDouble();
+    touchX = touch.page.x.toDouble() - left;
+    touchY = touch.page.y.toDouble() - top;
     finger = true;
   }
   
