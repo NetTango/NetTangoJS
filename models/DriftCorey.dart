@@ -3,22 +3,12 @@ library nettango;
 import 'dart:html';
 import 'dart:math';
 import 'dart:json';
-
-part 'Color.dart';
-part 'Touch.dart';
-part 'Turtle.dart';
-part 'Patch.dart';
-part 'Tween.dart';
-part 'Model.dart';
-part 'Toolbar.dart';
-part 'JsonObject.dart';
+import '../core/ntango.dart';
 
 
 void main() {
    DriftModel model = new DriftModel();
-   NetTango ntango = new NetTango(model);
-   ntango.showToolbar();
-   ntango.restart();
+   model.restart();
 }
 
 
