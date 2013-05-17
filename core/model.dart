@@ -73,6 +73,9 @@ abstract class Model {
    
   /* Random number generator */
   static Random rnd = new Random();
+  
+  /* Turtle canvas needed for touch event processing */
+  CanvasElement canvas;
    
   /* Drawing context for turtles */
   CanvasRenderingContext2D tctx = null;
@@ -83,18 +86,31 @@ abstract class Model {
   /* Control toolbar */
   Toolbar toolbar;
   
+  /* Is the mouse or finger down? */
+  bool down = false;
+  
    
   Model(this.name, this.id) {
     
     // Turtle canvas
-    CanvasElement canvas = document.query("#${id}-turtles");
+    canvas = document.query("#${id}-turtles");
     width = canvas.width;
     height = canvas.height;
     tctx = canvas.getContext("2d");
     
+    // Register mouse events
+    canvas.onMouseDown.listen((e) => _mouseDown(e));
+    canvas.onMouseUp.listen((e) => _mouseUp(e));
+    canvas.onMouseMove.listen((e) => _mouseMove(e));
+
+    // Register touch events
+    canvas.onTouchStart.listen((e) => _touchDown(e));
+    canvas.onTouchMove.listen((e) => _touchDrag(e));
+    canvas.onTouchEnd.listen((e) => _touchUp(e));    
+    
     // Patch canvas
-    canvas = document.query("#${id}-patches");
-    if (canvas != null) pctx = canvas.getContext("2d");
+    CanvasElement pcanvas = document.query("#${id}-patches");
+    if (pcanvas != null) pctx = pcanvas.getContext("2d");
  
     // Toolbar
     toolbar = new Toolbar(this);
@@ -310,8 +326,8 @@ abstract class Model {
       return null;
     }
   }
-   
-   
+  
+  
   void _drawTurtles(var ctx) {
     ctx.clearRect(0, 0, width, height);
     num cx = (0.5 - minPatchX) * patchSize;
@@ -376,5 +392,65 @@ abstract class Model {
   num get maxWorldX => maxPatchX + 0.5;
   int get worldWidth => maxPatchX - minPatchX + 1;
   int get worldHeight => maxPatchY - minPatchY + 1;
+  
+  
+  /**
+   * Subclasses can override these methods to do touch processing
+   */
+  void doTouchDown(Contact c) {
+    // Here are some examples
+    // num tx = screenToWorldX(c.touchX, c.touchY);
+    // num ty = screenToWorldY(c.touchX, c.touchY);
+    // Patch p = patchAt(tx, ty);
+    
+    // ...
+    // List<Turtle> turtles = new List<Turtle>();
+    // for (Turtle t in turtles) {
+    //   if (t.containsTouch(c)) {
+    //     turtles.add(t);
+    // }
+  }
+  
+  void doTouchUp(Contact c) { }
+  
+  void doTouchDrag(Contact c) { }
+  
+  
+  void _mouseUp(MouseEvent evt) {
+    down = false;
+    doTouchUp(new Contact.fromMouse(evt));
+  }
+  
+  
+  void _mouseDown(MouseEvent evt) {
+    down = true;
+    doTouchDown(new Contact.fromMouse(evt));
+  }
+   
+  
+  void _mouseMove(MouseEvent evt) {
+    if (down) doTouchDrag(new Contact.fromMouse(evt));
+  }
+  
+  
+  void _touchDown(TouchEvent tframe) {
+    for (Touch touch in tframe.changedTouches) {
+      doTouchDown(new Contact.fromTouch(touch, canvas));
+    }
+  }
+  
+  
+  void _touchUp(TouchEvent tframe) {
+    for (Touch touch in tframe.changedTouches) {
+      doTouchUp(new Contact.fromTouch(touch, canvas));
+    }
+  }
+  
+  
+  void _touchDrag(TouchEvent tframe) {
+    for (Touch touch in tframe.changedTouches) {
+      doTouchDrag(new Contact.fromTouch(touch, canvas));
+    }
+  }  
 }
 
