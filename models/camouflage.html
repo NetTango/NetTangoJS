@@ -1,22 +1,40 @@
 <!DOCTYPE html> 
 <html> 
 <head> 
-   <title>NetTango (JS)</title>
-   <meta name="apple-mobile-web-app-capable" content="yes" />
-   <meta name="viewport" content="initial-scale=1.0; maximum-scale=1.0; user-scalable=no" />
-      
-   <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />   
-   <link rel="stylesheet" href="default.css" />
+   <title>NetTango: Camouflage</title>
+   <meta charset="utf-8">
+   <meta name="apple-mobile-web-app-capable" content="yes">
+   <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+   <link rel="stylesheet" href="../css/toolbar.css">
+   <style>
+body {
+   background-color: #445368;
+}
+
+#camo-patches {
+   background-image: url('../images/texture2.png');
+   position: absolute;
+   left: 50px;
+   top: 50px;
+   z-index: 0;
+}
+
+#camo-turtles {
+   position: absolute;
+   left: 50px;
+   top: 50px;
+   z-index: 1;
+}
+   </style>
 </head> 
 <body>
-   <div id="content">
-      <canvas id="patches" width="800" height="600"></canvas>
-      <canvas id="turtles" width="800" height="600"></canvas>
-      <canvas id="events" width="800" height="600"></canvas>
-      <!-- script src="main.dart.js" type="text/javascript"></script -->
-      <script src="Camouflage.dart" type="application/dart"></script>
-      <script src="https://dart.googlecode.com/svn/branches/bleeding_edge/dart/client/dart.js"></script>
-      
-   </div>
+   
+   <canvas id="camo-patches" width="800" height="600"></canvas>
+   <canvas id="camo-turtles" width="800" height="600"></canvas>
+   
+   
+   <script src="Camouflage.dart" type="application/dart"></script>
+   <script src="../core/dart.js"></script>
+
 </body>
 </html>
