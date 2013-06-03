@@ -156,18 +156,37 @@ abstract class Model {
         deadTurtles.add(t);
       }
     }
-      
-    // animate turtles
+    
+    _tickTurtles();
+    _tickPatches();
+    _updatePlots();
+  }
+  
+
+/*
+ * Animate the turtles
+ */
+  void _tickTurtles() {
     for (int i=0; i<turtles.length; i++) {
       turtles[i].tick();
     }
-      
-    // animate patches
+  }
+  
+  
+/*
+ * Animate the patches
+ */
+  void _tickPatches() {
     for (var patch in patches) {
       patch.tick();
-    }
-    
-    // update plots
+    }    
+  }
+  
+
+/*
+ * Update the plots
+ */
+  void _updatePlots() {
     if (ticks % 10 == 0) {
       for (Plot plot in plots) {
         plot.update(ticks);
@@ -286,7 +305,7 @@ abstract class Model {
    
    
   void clearPatches() {
-    patches.clear();
+    patches = new List(worldWidth * worldHeight);    
   }
    
    
