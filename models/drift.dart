@@ -79,7 +79,7 @@ class DriftModel extends Model {
     
     for (int i=0; i<TURTLE_COUNT; i++) {
       Turtle t = new Turtle(this);
-      t["energy"] = 100;
+      t["energy"] = Turtle.rnd.nextInt(100);
       t.color = colors[i % 5].clone();
       t.setBehavior(behavior);
       addTurtle(t);
