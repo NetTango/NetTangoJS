@@ -52,8 +52,8 @@ class Interpreter {
   }
   
   
-  void loadJSON(String json) {
-    load(new Expression(parse(json)));
+  void loadJSON(String expr) {
+    load(new Expression( json.parse(expr)));
   }
 
 
