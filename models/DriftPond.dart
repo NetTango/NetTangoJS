@@ -3,35 +3,59 @@ import 'dart:math';
 import 'dart:json';
 import '../core/ntango.dart';
 
+var _draggin = null;
+var OutOfBoundsPoint = new Point(-100,-100);
+Map<String,Point> locationOfLeaf = new Map<String,Point>();
 
 void main() {
-  DriftModel model = new DriftModel("Drift");
+  var leaves = document.queryAll('.leaf');
+  for (var leaf in leaves) {
+    leaf.onMouseDown.listen( dragStart );
+  }
+  window.onMouseUp.listen( dragStop );
+  window.onMouseMove.listen(maybeMove); 
+  
+  DriftModel model = new DriftModel("Drift Pond");
   model.restart();
 }
 
+void maybeMove( MouseEvent event ) {
+  if (_draggin != null) {
+    updateDraggin( event.clientX, event.clientY );
+  }
+}
+
+void updateDraggin(x, y) {
+  _draggin.style.left = (x - 60).toString() + "px";
+  _draggin.style.top = (y - 50).toString() + "px";
+}
+
+
+void dragStart(MouseEvent event) {
+  _draggin = event.target;
+  locationOfLeaf[_draggin.id] = OutOfBoundsPoint();
+
+  print(_draggin.id);
+}
+
+void dragStop(MouseEvent event) {
+  locationOfLeaf[_draggin.id] = new Point(event.clientX, event.clientY);
+  _draggin = null;
+}
 
 class DriftModel extends Model { 
   
   final int TURTLE_COUNT = 60;
   Plot plot;
    
-  DriftModel(String name) : super(name, 'drift') {
-    plot = new Plot("drift-plot");
-    plot.title = "Number of Bugs / Amount of Grass";
+  DriftModel(String name) : super(name, 'drift-pond') {
+    plot = new Plot("drift-pond-plot");
+    plot.title = "Number of Bugs";
     plot.labelX = "time";
     Pen pen = new Pen("bugs", "purple");
     pen.updater = (int ticks) { return turtles.length; };
     plot.addPen(pen);
-    
-    pen = new Pen("grass", "green");
-    pen.updater = (int ticks) {
-      double count = 0.0;
-      for (Patch patch in patches) {
-        count += patch["plant-energy"];
-      }
-      return count / patches.length;
-    };
-    plot.addPen(pen);
+
     plot.minY = 0;
     plot.maxY = 100;
     plot.minX = 0;
@@ -97,7 +121,7 @@ class DriftModel extends Model {
     behavior = new Expression(parse(behaviors));
     
     for (Patch patch in patches) {
-      patch.color.setColor(0, 100, 0, 100);
+      patch.color.setColor(0, 100, 0, 128);
       patch.setBehavior(behavior);
       patch["plant-energy"] = 100;
     }
