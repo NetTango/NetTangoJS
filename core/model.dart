@@ -198,7 +198,7 @@ abstract class Model {
 /*
  * Start the simulation
  */
-  void play(num speedup) {
+  void play([num speedup = 1]) {
     play_state = speedup;
     toolbar.update();
     _animate();
