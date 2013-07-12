@@ -1,12 +1,14 @@
 import 'dart:html';
 import 'dart:math';
 import 'dart:json';
+import 'dart:async';
 import '../core/ntango.dart';
 
 
 void main() {
   DriftModel model = new DriftModel("Drift");
   model.restart();
+  
 }
 
 
@@ -37,6 +39,16 @@ class DriftModel extends Model {
     plot.minX = 0;
     plot.maxX = 50;
     addPlot(plot);
+
+    //-----------------------------------------------------
+    // This hides the status message when you click on it
+    //-----------------------------------------------------    
+    bindClickEvent("status", (event) {
+      if (getHtmlOpacity("status") > 0) {
+        setHtmlOpacity("status", 0.0);
+        play();
+      }
+    });
   }
    
    
@@ -102,8 +114,16 @@ class DriftModel extends Model {
       patch["plant-energy"] = 100;
     }
   }
-}
 
+
+  void tick() {
+    super.tick();
+    if (ticks % 50 == 0) {
+      pause();
+      showStatusMessage("You've been watching for ${ticks} ticks.");
+    }
+  }
+}
 /*
   void tick() {
     forward(0.1);
