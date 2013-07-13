@@ -48,18 +48,6 @@ class TouchManager {
       
     // Prevent screen from dragging on ipad
     document.onTouchMove.listen((e) => e.preventDefault());
-    
-    // Attempt to connect to the microsoft surface input stream
-    try {
-      WebSocket socket = new WebSocket("ws://localhost:405");
-      socket.onOpen.listen((evt) => print("connected to surface."));
-      socket.onMessage.listen((evt) => processTouches(evt.data));
-      socket.onError.listen((evt) => print("error in surface connection."));
-      socket.onClose.listen((evt) => print("surface connection closed."));
-    }
-    catch (x) {
-      print("unable to connect to surface.");
-    }    
   }
    
    
@@ -175,7 +163,7 @@ class TouchManager {
       }
     }
     if (tframe.touches.length == 0) {
-      touch_bindings = [];
+      touch_bindings.clear();
     }
   }
    
@@ -194,44 +182,8 @@ class TouchManager {
       }
     }
   }
+}  
   
-  
-/*
- * Process JSON touch events from microsoft surface
- */
-  void processTouches(data) {
-    var frame = new json.parse(data);
-      
-    var changed = [];
-    bool down = false;
-    bool drag = false;
-    bool up = false;
-    
-    // FIXME!
-    //for (var t in frame["touches"]) {
-    //  if (t["down"]) {
-    //    changed.add(new TouchEvent.fromJSON(t, parent));
-    //    down = true;
-    //  }
-    //  else if (t.drag) {
-    //    changed.add(new TouchEvent.fromJSON(t));
-    //    drag = true;
-    //  }
-    //  else if (t.up) {
-    //    changed.add(new TouchEvent.fromJSON(t));
-    //    up = true;
-    //  }
-    //}
-    //  
-    //frame.changedTouches = changed;
-    //if (down) touchDown(frame);
-    //if (drag) touchDrag(frame);
-    //if (up) touchUp(frame);
-    //  
-    //pframe = frame;
-  }  
-}
-
 
 /*
  * Objects on the screen must implement this interface to receive touch events
@@ -291,6 +243,7 @@ class Contact {
     touchY = touch.page.y.toDouble() - top;
     finger = true;
   }
+  
   
   Contact.fromJSON(var json, Element parent) {
     num left = window.pageXOffset;
