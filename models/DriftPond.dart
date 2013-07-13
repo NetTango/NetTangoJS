@@ -3,28 +3,25 @@ import 'dart:math';
 import 'dart:json';
 import '../core/ntango.dart';
 
+
 Element _draggin = null;
 String draggingLeaf = "";
 CanvasElement canvas = document.query("#drift-pond-pads");
-Element sheen = document.query("#drift-pond-sheen");
+String turtleBehaviors = "";
 
-var OutOfBoundsPoint = new Point(660,600);
+var leafImage = document.query("#leafimage");
+var BackInStackPoint = new Point(660,600);
 int leafIndex = 0;
 Map<String,Point> locationOfLeaf = new Map<String,Point>();
 
 DriftModel model;
-int dimbase = 50;
-int dx = 5;
-int dy = 5;
-
-var leafImage = document.query("#leafimage");
 void main() {
   locationOfLeaf["-1"] = new Point(250,250);
   var leafstack = document.query("#leafstack");
-  
   leafstack.onMouseDown.listen( dragStart );
+  
   var topCanv = document.query("#drift-pond-turtles");
-  topCanv.onMouseDown.listen( repositionStart );
+  topCanv.onMouseDown.listen( startAdjustingLeaf );
   
   window.onMouseUp.listen( dragStop );
   window.onMouseMove.listen(maybeMove); 
@@ -34,11 +31,11 @@ void main() {
   model.requestRedraw();
 }
 
-void repositionStart( MouseEvent evt ) {
+//move an already-placed leaf
+void startAdjustingLeaf( MouseEvent evt ) {
   Point testPoint = new Point(evt.clientX - 110, evt.clientY - 100);
   String wLeaf = findClosestCenterTo(testPoint);
   num dist = testPoint.distanceTo(locationOfLeaf[wLeaf]);
-//  print("distance is ${dist}");
   if ( dist < 50 ) {
     draggingLeaf = wLeaf;
   }
@@ -57,7 +54,7 @@ String findClosestCenterTo(Point testPoint) {
   return ind;
 }
 
-
+//dragHandlerForAllMouseInteractions
 void maybeMove( MouseEvent event ) {
   if (_draggin != null) {
     updateDraggin( event.clientX, event.clientY );
@@ -66,35 +63,35 @@ void maybeMove( MouseEvent event ) {
   }
 }
 
+//actually move the adjusted leaf
 void repositionLeaf( nx, ny ) {
   locationOfLeaf[draggingLeaf] = new Point(nx, ny);
   model.requestRedraw();
 }
 
+//actually move the not-yet placed leaf div-icon
 void updateDraggin(x, y) {
   _draggin.style.left = (x - 60).toString() + "px";
   _draggin.style.top = (y - 50).toString() + "px";
-//  print("drag" + x.toString() + "," + y.toString() + " --> " + _draggin.style.left );
 }
 
 
+//set the dragging state information as appropriate.
 void dragStart(MouseEvent event) {
-  _draggin = document.query("#leafmoving"); //new Element.html('<div class="leafmoving" style="top: 650px; left: 650px; height: 100px; width: 121px;" id="leafmoving" draggable="false"></div>');
+  _draggin = document.query("#leafmoving"); 
   _draggin.style.zIndex="7";
   leafIndex++;
-  locationOfLeaf[(leafIndex.toString()) ] = OutOfBoundsPoint;
-
- // print(_draggin.id);
+  locationOfLeaf[(leafIndex.toString()) ] = BackInStackPoint;
 }
 
+//reset state back to not-dragging (general mouse-up handler)
 void dragStop(MouseEvent event) {
   if (_draggin != null) {
     locationOfLeaf[(leafIndex.toString()) ] = new Point(event.clientX - 110, event.clientY - 100);
-    _draggin.style.left = OutOfBoundsPoint.x.toString() + "px";
-    _draggin.style.top = OutOfBoundsPoint.y.toString() + "px";
+    _draggin.style.left = BackInStackPoint.x.toString() + "px";
+    _draggin.style.top = BackInStackPoint.y.toString() + "px";
     _draggin.style.zIndex="5";
     _draggin = null;
-    //print(locationOfLeaf.toString());
     model.requestRedraw();
   } else if (draggingLeaf.length > 0 ) {
     draggingLeaf = "";
@@ -102,8 +99,10 @@ void dragStop(MouseEvent event) {
   }
 }
 
+
+//the actual model class implementation
 class DriftModel extends Model { 
-  
+
   final int TURTLE_COUNT = 60;
   Plot plot;
    
@@ -123,7 +122,11 @@ class DriftModel extends Model {
   }
    
  
+  //these three methods relate to maintaining fresh drawing of the leaf layer
+  //i have left them within the model class b/c turtles are interacting with it. 
+  //but its state is only changed by the mouse events.
   
+  //this will draw leaf layer (which is actually above the patch canvas).
   void drawPatchesOnce(CanvasRenderingContext2D context) {
     context.clearRect(0, 0, 600, 600);
     context.globalAlpha = 0.0;
@@ -137,13 +140,17 @@ class DriftModel extends Model {
       var destHeight = 100;
       var source = leafImage;
       context.globalAlpha = 0.0;
+      
+      //make these two concentric (and fully transparent) regions 
+      //around the leaves to improve the bugs' ability
+      //to stay on the leaves -- not really working at the moment
       context.fillStyle="#000022";
       context.fillRect(destX - 4,destY - 4,destWidth + 8,destHeight + 8);
-      context.fillStyle="#000122";
       
+      context.fillStyle="#000122";
       context.fillRect(destX - 2,destY - 2,destWidth + 4,destHeight + 4);
       
- //     print("about to try to draw at " + destX.toString() + ", " + destY.toString() + "width=" + destWidth.toString() + ", height=" + destHeight.toString()  );
+      //draw the leaf now.
       context.globalAlpha = 1;
       context.drawImage(source, destX, destY);//, destWidth, destHeight);
     }
@@ -159,7 +166,7 @@ class DriftModel extends Model {
   }
   
   
-   
+  //setup the model. 
   void setup() {
 
     clearTurtles();
@@ -173,7 +180,8 @@ class DriftModel extends Model {
                 new Color(255, 255, 0, 255),
                 new Color(0, 255, 255, 255)];
     
-    String behaviors = """
+    //initialized here but given top-level scope.    
+    turtleBehaviors = """
     [
       ["forward", 0.03],
       ["right", ["random", 20] ],
@@ -194,7 +202,7 @@ class DriftModel extends Model {
       ] ]
     ]
     """;
-    Expression behavior = new Expression(parse(behaviors));
+    Expression behavior = new Expression(parse(turtleBehaviors));
     
     
     for (int i=0; i<TURTLE_COUNT; i++) {  
@@ -205,7 +213,7 @@ class DriftModel extends Model {
       addTurtle(t);
     }
     
-    behaviors = """
+    String patchBehaviors = """
     [
       [ "set", "plant-energy", [ "+", "plant-energy", 1 ] ],
       [ "if", [">", "plant-energy", 100 ], [
@@ -214,8 +222,9 @@ class DriftModel extends Model {
     ]
     """;
     
-    //[ "set", "color-blue", "plant-energy" ]
-    behavior = new Expression(parse(behaviors));
+    //remove patch coloration for plant energy indication.
+    //[ "set", "color-blue", "plant-energy" ]  
+    behavior = new Expression(parse(patchBehaviors));
     
     for (Patch patch in patches) {
       patch.color.setColor(0, 0, 100, 128);
@@ -226,31 +235,33 @@ class DriftModel extends Model {
 }
 
 
+
+
+
+//PondTurtle class.  I had some trouble getting this implementation to be able to access the
+//private variables of Turtle.  I think this is because of the "library private" nature of 
+//those variables.  Perhaps they should be declared with different access?
 class PondTurtle extends Turtle {
   
   PondTurtle(Model model) :super(model) {
     
   }
   
+  //overriding TICK because i need to work with conditions that are not "netlogo-native"
   void tick() {
     super.tick();
     var xc = model.worldToScreenX(x, y);
     var yc = model.worldToScreenY(x, y);
-    //print("Image data for canvas at $xc, $yc");
-    //print(canvas.context2D.getImageData(xc, yc, 1, 1).data);
+    
     var imdat = canvas.context2D.getImageData(xc, yc, 1, 1).data;
-   // print("image data for id ${id} is ${imdat}");
     if (imdat.indexOf(0) > -1) {
-    //  print("image data for id ${id} is ${imdat}");
       if ( imdat[0] == 0 && imdat[1] == 0 && imdat[3] == 0  ) { 
-    //     print("turtle id ${id} is dying b.c of ${imdat}");
          die(); 
        }
       else {
         right(180);
       }
     } 
-    
   }
   
   PondTurtle clone() {
@@ -261,61 +272,11 @@ class PondTurtle extends Turtle {
     t.heading = heading;
     t.color = color.clone();
     t["energy"] = 100;
-    String behaviors = """
-    [
-      ["forward", 0.03],
-      ["right", ["random", 20] ],
-      ["left", ["random", 20] ],
-      ["set", "energy", ["-", "energy", 0.2] ],
-      ["if", [ "<=", "energy", 0], [ "die"] ],
-      ["ask", ["patch-here"], [
-          [ "if", [ ">", "plant-energy", 0 ], [
-              [ "set", "plant-energy", [ "-", "plant-energy", 5 ] ],
-              [ "set", "energy", [ "+", "energy", 4] ]
-          ] ]
-      ] ],
-      ["if", [ ">", "energy", 90], [
-          ["if", [ ">", ["random", 100], 95 ], [
-              ["set", "energy", 50 ],
-              [ "hatch" ]
-          ] ]
-      ] ]
-    ]
-    """;
-    Expression behavior = new Expression(parse(behaviors));
+    
+    Expression behavior = new Expression(parse(turtleBehaviors));
     
     t.setBehavior(behavior);
     return t;
   }
 }
 
-
-
-
-
-/*
-  void tick() {
-    forward(0.1);
-    right(Turtle.rnd.nextInt(20));
-    left(Turtle.rnd.nextInt(20));
-    Patch p = patchHere();
-      //if (energy < 1 && p.energy > 0.2) {
-      //   energy += 0.03;
-      //   p.energy -= 0.2;
-     // }
-    color.alpha = (255 * this["energy"]).toInt();
-    this["energy"] -= 0.01;
-    if (this["energy"] <= 0) {
-         die();
-    } else if (this["energy"] > 0.9 && Turtle.rnd.nextInt(100) > 95) {
-      reproduce();
-      
-    }
-  }
-   
-      copy.color.blue = color.blue;
-      copy["energy"] = 0.5;
-      this["energy"] = 0.5;
-      model.addTurtle(copy);
-   }
-*/
