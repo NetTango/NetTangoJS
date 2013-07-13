@@ -243,6 +243,8 @@ class DriftModel extends Model {
 //those variables.  Perhaps they should be declared with different access?
 class PondTurtle extends Turtle {
   
+  static Random rnd = new Random();
+  
   PondTurtle(Model model) :super(model) {
     
   }
@@ -262,6 +264,30 @@ class PondTurtle extends Turtle {
         right(180);
       }
     } 
+  }
+  
+  void draw(var ctx) {
+    drawLegs(ctx, 0, 0, 0.1);
+    roundRect(ctx, -0.1, -0.1, 0.2, 0.2, 0.1);
+    ctx.fillStyle = color.toString();
+    ctx.fill();
+    ctx.strokeStyle = "rgba(0, 0, 0, 0.5)";
+    ctx.lineWidth = 0.05;
+    ctx.stroke();
+  }
+  
+  void drawLegs(CanvasRenderingContext2D ctx, num x, num y, num r) {
+    var d = rnd.nextDouble() * 1.5 * r;
+    ctx.beginPath();
+    ctx.moveTo(x+2*r,y+d);
+    ctx.lineTo(x-2*r,y-d);
+    ctx.moveTo(x+2*r,y);
+    ctx.lineTo(x-2*r,y);
+    ctx.moveTo(x+2*r,y-d);
+    ctx.lineTo(x-2*r,y+d);
+    ctx.lineWidth = 0.02;
+    ctx.strokeStyle = "rgba(0, 0, 0, 1)";
+    ctx.stroke();
   }
   
   PondTurtle clone() {
