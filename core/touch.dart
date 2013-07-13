@@ -13,10 +13,10 @@ part of NetTango;
 class TouchManager {
 
   /* A list of touchable objects on the screen */
-  static var touchables = new List<Touchable>();
+  List<Touchable> touchables = new List<Touchable>();
    
   /* Bindings from event IDs to touchable objects */
-  static var touch_bindings = new Map<int, Touchable>();
+  Map<int, Touchable> touch_bindings = new Map<int, Touchable>();
    
   /* Is the mouse currently down */
   bool mdown = false;
@@ -33,14 +33,18 @@ class TouchManager {
   void registerEvents(Element element) {
     parent = element;
     
-    element.onMouseDown.listen((e) => doMouseDown(e));
-    element.onMouseUp.listen((e) => doMouseUp(e));
-    element.onMouseMove.listen((e) => doMouseMove(e));
+    element.onMouseDown.listen((e) => _mouseDown(e));
+    element.onMouseUp.listen((e) => _mouseUp(e));
+    element.onMouseMove.listen((e) => _mouseMove(e));
+    //element.onMouseOut.listen((e) => _mouseExit(e));
       
     // Events for iPad
-    element.onTouchStart.listen((e) => doTouchDown(e));
-    element.onTouchMove.listen((e) => doTouchDrag(e));
-    element.onTouchEnd.listen((e) => doTouchUp(e));
+    print("register events");
+    /*
+    element.onTouchStart.listen((e) => _touchDown(e));
+    element.onTouchMove.listen((e) => _touchDrag(e));
+    element.onTouchEnd.listen((e) => _touchUp(e));
+    */
       
     // Prevent screen from dragging on ipad
     document.onTouchMove.listen((e) => e.preventDefault());
@@ -62,7 +66,7 @@ class TouchManager {
 /*
  * Add a touchable object to the list
  */
-  static void addTouchable(Touchable t) {
+  void addTouchable(Touchable t) {
     touchables.add(t);
   }
    
@@ -70,13 +74,8 @@ class TouchManager {
 /*
  * Remove a touchable object from the master list
  */
-  static void removeTouchable(Touchable t) {
-    for (int i=0; i<touchables.length; i++) {
-      if (t == touchables[i]) {
-        touchables.removeRange(i, 1);
-        return;
-      }
-    }
+  void removeTouchable(Touchable t) {
+    touchables.remove(t);
   }
    
    
@@ -84,9 +83,9 @@ class TouchManager {
  * Find a touchable object that intersects with the given touch event
  */
   Touchable findTouchTarget(Contact tp) {
-    for (Touchable t in touchables) {
-      if (t.containsTouch(tp)) {
-        return t;
+    for (int i=touchables.length - 1; i >= 0; i--) {
+      if (touchables[i].containsTouch(tp)) {
+        return touchables[i];
       }
     }
     return null;
@@ -96,7 +95,20 @@ class TouchManager {
 /*
  * Convert mouseUp to touchUp events
  */
-  void doMouseUp(MouseEvent evt) {
+  void _mouseUp(MouseEvent evt) {
+    Touchable target = touch_bindings[-1];
+    if (target != null) {
+      target.touchUp(new Contact.fromMouse(evt));
+    }
+    touch_bindings[-1] = null;
+    mdown = false;
+  }
+  
+  
+/*
+ * Convert mouseOut to touchExit event
+ */
+  void _mouseExit(MouseEvent evt) {
     Touchable target = touch_bindings[-1];
     if (target != null) {
       target.touchUp(new Contact.fromMouse(evt));
@@ -109,7 +121,7 @@ class TouchManager {
 /*
  * Convert mouseDown to touchDown events
  */
-  void doMouseDown(MouseEvent evt) {
+  void _mouseDown(MouseEvent evt) {
     Contact t = new Contact.fromMouse(evt);
     Touchable target = findTouchTarget(t);
     if (target != null) {
@@ -124,7 +136,7 @@ class TouchManager {
 /*
  * Convert mouseMove to touchDrag events
  */
-  void doMouseMove(MouseEvent evt) {
+  void _mouseMove(MouseEvent evt) {
     if (mdown) {
       Contact t = new Contact.fromMouse(evt);
       Touchable target = touch_bindings[-1];
@@ -140,7 +152,7 @@ class TouchManager {
   }
    
    
-  void doTouchDown(var tframe) {
+  void _touchDown(var tframe) {
     for (Touch touch in tframe.changedTouches) {
       Contact t = new Contact.fromTouch(touch, parent);
       Touchable target = findTouchTarget(t);
@@ -153,7 +165,7 @@ class TouchManager {
   }
    
    
-  void doTouchUp(var tframe) {
+  void _touchUp(var tframe) {
     for (Touch touch in tframe.changedTouches) {
       Contact t = new Contact.fromTouch(touch, parent);
       Touchable target = touch_bindings[t.id];
@@ -168,7 +180,7 @@ class TouchManager {
   }
    
    
-  void doTouchDrag(var tframe) {
+  void _touchDrag(var tframe) {
     for (Touch touch in tframe.changedTouches) {
       Contact t = new Contact.fromTouch(touch, parent);
       Touchable target = touch_bindings[t.id];
