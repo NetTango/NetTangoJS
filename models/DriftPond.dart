@@ -277,7 +277,7 @@ class PondTurtle extends Turtle {
   }
   
   void drawLegs(CanvasRenderingContext2D ctx, num x, num y, num r) {
-    var d = rnd.nextDouble() * 1.5 * r;
+    double d = rnd.nextDouble() * 1.5 * r;
     ctx.beginPath();
     ctx.moveTo(x+2*r,y+d);
     ctx.lineTo(x-2*r,y-d);
