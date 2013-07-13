@@ -1,0 +1,85 @@
+@charset "utf-8";
+
+* { 
+   -webkit-user-select: none; 
+   -webkit-tap-highlight-color: rgba(0,0,0,0);    
+}
+
+body {
+   margin: 0;
+   padding: 0;
+   color: #ccc;
+   font: 15px "Helvetica Neue", Helvetica, Arial, sans-serif;
+   font-weight: 300;
+   line-height: 1.625;
+   overflow: hidden;
+   background-color: #445368;
+}
+
+#drift-pond-patches {
+   background-image: url('../images/water.png');
+   position: absolute;
+   left: 50px;
+   top: 50px;
+   z-index: 0;
+}
+
+#drift-pond-pads {
+   position: absolute;
+   left: 50px;
+   top: 50px;
+   z-index: 1;
+}
+
+#drift-pond-turtles {
+   position: absolute;
+   left: 50px;
+   top: 50px;
+   z-index: 3;
+}
+
+/*sheen not currently used -- need a better approach */
+#drift-pond-sheen {
+   position: absolute;
+   left: 50px;
+   top: 50px;
+   height: 596px;
+   width: 596px;
+   z-index: 2;
+   opacity:0.5;
+  filter:alpha(opacity=50); /* For IE8 and earlier */
+}
+
+#sheenimage {
+  opacity:0.5;
+  filter:alpha(opacity=50); /* For IE8 and earlier */
+  }
+
+#drift-pond-plot {
+   position: absolute;
+   left: 680px;
+   top: 50px;
+   width: 600px;
+   height: 300px;
+   border: 1px solid black;
+   background-color: rgba(255, 255, 255, 0.8);
+   z-index: 4;
+}
+
+.leafstack {
+  background-image: url('../images/lilypad2.png');
+  position: absolute;
+  cursor: move;
+  height: 100px;
+  width: 121px;
+   z-index: 6;
+}
+
+.leafmoving {
+  background-image: url('../images/lilypad2.png');
+  position: absolute;
+   cursor: move;
+  height: 100px;
+  width: 121px;
+   z-index: 5;
+}
