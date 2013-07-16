@@ -268,7 +268,9 @@ class PondTurtle extends Turtle {
   
   void draw(var ctx) {
     drawLegs(ctx, 0, 0, 0.1);
-    roundRect(ctx, -0.1, -0.1, 0.2, 0.2, 0.1);
+    //roundRect(ctx, -0.1, -0.1, 0.2, 0.2, 0.1);
+    ctx.beginPath();
+    ctx.arc(0, 0, 0.1, 0, PI * 2, true);
     ctx.fillStyle = color.toString();
     ctx.fill();
     ctx.strokeStyle = "rgba(0, 0, 0, 0.5)";
