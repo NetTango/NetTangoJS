@@ -18,6 +18,7 @@ body {
 
 #drift-pond-patches {
    background-image: url('../images/water.png');
+   background-size: cover;
    position: absolute;
    left: 50px;
    top: 50px;
