@@ -5,7 +5,10 @@ import '../core/ntango.dart';
 
 
 Element _draggin = null;
+Point latestDelta = new Point(0,0);
+Point dragPointOffset = new Point(0,0);
 String draggingLeaf = "";
+
 CanvasElement canvas = document.query("#drift-pond-pads");
 String turtleBehaviors = "";
 
@@ -13,6 +16,7 @@ var leafImage = document.query("#leafimage");
 var BackInStackPoint = new Point(660,600);
 int leafIndex = 0;
 Map<String,Point> locationOfLeaf = new Map<String,Point>();
+num zerox, zeroy;
 
 DriftModel model;
 void main() {
@@ -26,7 +30,12 @@ void main() {
   window.onMouseUp.listen( dragStop );
   window.onMouseMove.listen(maybeMove); 
   
+  
   model = new DriftModel("Drift Pond");
+  
+  zerox = model.screenToWorldX(0, 0);
+  zeroy = model.screenToWorldY(0, 0);
+  
   model.restart();
   model.requestRedraw();
 }
@@ -38,6 +47,7 @@ void startAdjustingLeaf( MouseEvent evt ) {
   num dist = testPoint.distanceTo(locationOfLeaf[wLeaf]);
   if ( dist < 50 ) {
     draggingLeaf = wLeaf;
+    findDragPointOffset( testPoint );
   }
 }
 
@@ -63,9 +73,20 @@ void maybeMove( MouseEvent event ) {
   }
 }
 
+void findDragPointOffset(Point clickPoint) {
+  dragPointOffset = locationOfLeaf[draggingLeaf] - clickPoint;
+}
+
+
 //actually move the adjusted leaf
 void repositionLeaf( nx, ny ) {
-  locationOfLeaf[draggingLeaf] = new Point(nx, ny);
+  Point oldLoc = locationOfLeaf[draggingLeaf];
+  locationOfLeaf[draggingLeaf] = new Point(nx, ny) + dragPointOffset;
+  latestDelta = locationOfLeaf[draggingLeaf] - oldLoc; 
+  
+ 
+  latestDelta = new Point (model.screenToWorldX(latestDelta.x, latestDelta.y) - zerox, model.screenToWorldY(latestDelta.x, latestDelta.y) - zeroy);
+  
   model.requestRedraw();
 }
 
@@ -95,6 +116,7 @@ void dragStop(MouseEvent event) {
     model.requestRedraw();
   } else if (draggingLeaf.length > 0 ) {
     draggingLeaf = "";
+    latestDelta = new Point(0,0);
     model.requestRedraw();
   }
 }
@@ -252,11 +274,23 @@ class PondTurtle extends Turtle {
   //overriding TICK because i need to work with conditions that are not "netlogo-native"
   void tick() {
     super.tick();
+   
+    if (draggingLeaf.length > 0 && latestDelta.x != 0 && latestDelta.y != 0) {
+      Point whereIAM = new Point(x,y);
+      if ( findClosestCenterTo(whereIAM) == draggingLeaf)
+      {        
+        x += latestDelta.x;
+        y += latestDelta.y;
+      }
+    }
     var xc = model.worldToScreenX(x, y);
     var yc = model.worldToScreenY(x, y);
     
+    
     var imdat = canvas.context2D.getImageData(xc, yc, 1, 1).data;
     if (imdat.indexOf(0) > -1) {
+      forward(-0.1);
+      imdat = canvas.context2D.getImageData(xc, yc, 1, 1).data;
       if ( imdat[0] == 0 && imdat[1] == 0 && imdat[3] == 0  ) { 
          die(); 
        }
