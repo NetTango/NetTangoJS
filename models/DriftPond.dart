@@ -19,6 +19,24 @@ Map<String,Point> locationOfLeaf = new Map<String,Point>();
 num zerox, zeroy;
 
 DriftModel model;
+var turtleColors;
+
+bool colorsAreEqual( Color left, Color right ) {
+  if (left.red == right.red) {
+    if (left.green == right.green ) {
+      if (left.blue == right.blue) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+bool redTest(Turtle t) { return colorsAreEqual(t.color, turtleColors[0]); }
+bool greenTest(Turtle t) { return colorsAreEqual(t.color, turtleColors[1]); }
+bool blueTest(Turtle t) { return colorsAreEqual(t.color, turtleColors[2]); }
+bool yellowTest(Turtle t) { return colorsAreEqual(t.color, turtleColors[3]); }
+bool cyanTest(Turtle t) { return colorsAreEqual(t.color, turtleColors[4]); }
+
 void main() {
   locationOfLeaf["-1"] = new Point(250,250);
   var leafstack = document.query("#leafstack");
@@ -130,14 +148,31 @@ class DriftModel extends Model {
    
   DriftModel(String name) : super(name, 'drift-pond') {
     plot = new Plot("drift-pond-plot");
-    plot.title = "Number of Bugs";
+    plot.title = "Number of Bugs of Each Color";
     plot.labelX = "time";
-    Pen pen = new Pen("bugs", "purple");
-    pen.updater = (int ticks) { return turtles.length; };
-    plot.addPen(pen);
+
+    Pen redPen = new Pen("bugs", "red");
+    redPen.updater = (int ticks) { return turtles.where(redTest).length; };
+    plot.addPen(redPen);
+    
+    Pen greenPen = new Pen("bugs", "green");
+    greenPen.updater = (int ticks) { return turtles.where(greenTest).length; };
+    plot.addPen(greenPen);
+    
+    Pen bluePen = new Pen("bugs", "blue");
+    bluePen.updater = (int ticks) { return turtles.where(blueTest).length; };
+    plot.addPen(bluePen);
+    
+    Pen yellowPen = new Pen("bugs", "yellow");
+    yellowPen.updater = (int ticks) { return turtles.where(yellowTest).length; };
+    plot.addPen(yellowPen);
+    
+    Pen cyanPen = new Pen("bugs", "cyan");
+    cyanPen.updater = (int ticks) { return turtles.where(cyanTest).length; };
+    plot.addPen(cyanPen);
 
     plot.minY = 0;
-    plot.maxY = 100;
+    plot.maxY = 80;
     plot.minX = 0;
     plot.maxX = 50;
     addPlot(plot);
@@ -195,7 +230,7 @@ class DriftModel extends Model {
     clearPatches();
     initPatches();
       
-    var colors = [
+    turtleColors = [
                 new Color(255, 0, 0, 255),
                 new Color(0, 255, 0, 255),
                 new Color(0, 0, 255, 255),
@@ -230,7 +265,7 @@ class DriftModel extends Model {
     for (int i=0; i<TURTLE_COUNT; i++) {  
       PondTurtle t = new PondTurtle(this);
       t["energy"] = 100;
-      t.color = colors[i % 5].clone();
+      t.color = turtleColors[i % 5].clone();
       t.setBehavior(behavior);
       addTurtle(t);
     }
