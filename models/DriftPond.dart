@@ -41,13 +41,17 @@ void main() {
   locationOfLeaf["-1"] = new Point(250,250);
   var leafstack = document.query("#leafstack");
   leafstack.onMouseDown.listen( dragStart );
+  leafstack.onTouchStart.listen( touchStart );
   
   var topCanv = document.query("#drift-pond-turtles");
   topCanv.onMouseDown.listen( startAdjustingLeaf );
+  topCanv.onTouchStart.listen( startTouchAdjustingLeaf );
   
   window.onMouseUp.listen( dragStop );
   window.onMouseMove.listen(maybeMove); 
   
+  window.onTouchEnd.listen( touchStop );
+  window.onTouchMove.listen(maybeTouchMove); 
   
   model = new DriftModel("Drift Pond");
   
@@ -58,6 +62,20 @@ void main() {
   model.requestRedraw();
 }
 
+
+//touch-move an already-placed leaf
+void startTouchAdjustingLeaf( TouchEvent event ) {
+  if (event.changedTouches.length > 0 ) {
+    Touch t = event.changedTouches[0];
+    Point testPoint = new Point(t.client.x - 110, t.client.y - 100);
+    String wLeaf = findClosestCenterTo(testPoint);
+    num dist = testPoint.distanceTo(locationOfLeaf[wLeaf]);
+    if ( dist < 50 ) {
+      draggingLeaf = wLeaf;
+      findDragPointOffset( testPoint );
+    }
+  }
+}
 //move an already-placed leaf
 void startAdjustingLeaf( MouseEvent evt ) {
   Point testPoint = new Point(evt.clientX - 110, evt.clientY - 100);
@@ -88,6 +106,18 @@ void maybeMove( MouseEvent event ) {
     updateDraggin( event.clientX, event.clientY );
   } else if ( draggingLeaf.length > 0 ) {
     repositionLeaf( event.clientX - 110, event.clientY - 100 );
+  }
+}
+
+//dragHandlerForAllTouchInteractions
+void maybeTouchMove( TouchEvent event ) {
+  if (event.changedTouches.length > 0 ) {
+    Touch t = event.changedTouches[0];
+    if (_draggin != null) {
+      updateDraggin( t.client.x, t.client.y );
+    } else if ( draggingLeaf.length > 0 ) {
+      repositionLeaf( t.client.x - 110, t.client.y - 100 );
+    }
   }
 }
 
@@ -123,6 +153,17 @@ void dragStart(MouseEvent event) {
   locationOfLeaf[(leafIndex.toString()) ] = BackInStackPoint;
 }
 
+//set the dragging state information as appropriate.
+void touchStart(TouchEvent event) {
+  if (event.changedTouches.length > 0 ) {
+    Touch t = event.changedTouches[0];
+    _draggin = document.query("#leafmoving"); 
+    _draggin.style.zIndex="7";
+    leafIndex++;
+    locationOfLeaf[(leafIndex.toString()) ] = BackInStackPoint;
+  }
+}
+
 //reset state back to not-dragging (general mouse-up handler)
 void dragStop(MouseEvent event) {
   if (_draggin != null) {
@@ -139,6 +180,24 @@ void dragStop(MouseEvent event) {
   }
 }
 
+//reset state back to not-dragging (general mouse-up handler)
+void touchStop(TouchEvent event) {
+  if (event.changedTouches.length > 0 ) {
+    Touch t = event.changedTouches[0];
+    if (_draggin != null) {
+      locationOfLeaf[(leafIndex.toString()) ] = new Point(t.client.x - 110, t.client.y - 100);
+      _draggin.style.left = BackInStackPoint.x.toString() + "px";
+      _draggin.style.top = BackInStackPoint.y.toString() + "px";
+      _draggin.style.zIndex="5";
+      _draggin = null;
+      model.requestRedraw();
+    } else if (draggingLeaf.length > 0 ) {
+      draggingLeaf = "";
+      latestDelta = new Point(0,0);
+      model.requestRedraw();
+    }
+  }
+}
 
 //the actual model class implementation
 class DriftModel extends Model { 
