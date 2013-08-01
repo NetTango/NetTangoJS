@@ -401,7 +401,7 @@ class PondTurtle extends Turtle {
     ctx.arc(0, 0, 0.1, 0, PI * 2, true);
     ctx.fillStyle = color.toString();
     ctx.fill();
-    ctx.strokeStyle = "rgba(0, 0, 0, 0.5)";
+    ctx.strokeStyle = "rgba(10, 10, 10, 0.5)";
     ctx.lineWidth = 0.05;
     ctx.stroke();
   }
@@ -416,7 +416,7 @@ class PondTurtle extends Turtle {
     ctx.moveTo(x+2*r,y-d);
     ctx.lineTo(x-2*r,y+d);
     ctx.lineWidth = 0.02;
-    ctx.strokeStyle = "rgba(0, 0, 0, 1)";
+    ctx.strokeStyle = "rgba(10, 10, 10, 1)";
     ctx.stroke();
   }
   
