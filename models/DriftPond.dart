@@ -464,7 +464,7 @@ class PondTurtle extends Turtle {
     
     var imdat = canvas.context2D.getImageData(xc, yc, 1, 1).data;
     if (imdat.indexOf(0) > -1) {
-      forward(-0.055);
+      forward(-0.04);
       xc = model.worldToScreenX(x, y);
       yc = model.worldToScreenY(x, y);
       imdat = canvas.context2D.getImageData(xc, yc, 1, 1).data;
