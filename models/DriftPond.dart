@@ -51,8 +51,20 @@ bool cyanTest(Turtle t) { return colorsAreEqual(t.color, turtleColors[4]); }
 void main() {
   locationOfLeaf["-1"] = new Point(250,250);
   var leafstack = document.query("#leafstack");
+  
+  //uncomment these 2 lines and re-comment subsequent ones for default behavior
+  /*
   leafstack.onMouseDown.listen( dragStart );
   leafstack.onTouchStart.listen( touchStart );
+  */
+  
+  leafstack.style.visibility = "hidden";
+  document.query("#leafmoving").style.visibility = "hidden";
+  document.query("#leafimage").style.visibility = "hidden";
+  locationOfLeaf["0"] = new Point(50,350);
+  locationOfLeaf["1"] = new Point(350,50);
+  locationOfLeaf["2"] = new Point(450,450);
+  //end code to toggle
   
   var topCanv = document.query("#drift-pond-turtles");
   topCanv.onMouseDown.listen( startAdjustingLeaf );
@@ -391,7 +403,7 @@ class DriftModel extends Model {
           ] ]
       ] ],
       ["if", [ ">", "energy", 90], [
-          ["if", [ ">", ["random", 100], 95 ], [
+          ["if", [ ">", ["random", 100], 94 ], [
               ["set", "energy", 50 ],
               [ "hatch" ]
           ] ]
@@ -461,10 +473,9 @@ class PondTurtle extends Turtle {
     var xc = model.worldToScreenX(x, y);
     var yc = model.worldToScreenY(x, y);
     
-    
     var imdat = canvas.context2D.getImageData(xc, yc, 1, 1).data;
     if (imdat.indexOf(0) > -1) {
-      forward(-0.04);
+      forward(-0.05);
       xc = model.worldToScreenX(x, y);
       yc = model.worldToScreenY(x, y);
       imdat = canvas.context2D.getImageData(xc, yc, 1, 1).data;
@@ -472,7 +483,7 @@ class PondTurtle extends Turtle {
          die(); 
        }
       else {
-        right(180);
+        right(175);
       }
     } 
   }
