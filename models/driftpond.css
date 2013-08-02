@@ -67,6 +67,70 @@ body {
    z-index: 4;
 }
 
+.score {
+  position:absolute;
+   color: #000;
+   width: 200px;
+   text-align: center;
+   font: 22px "Helvetica Neue", Helvetica, Arial, sans-serif;
+   font-weight: normal;
+   color:#B4C3D8;
+   background-color: #546378;
+ }
+ 
+ .left {
+    left:0px;
+  }
+
+ .middle {
+    left:200px;
+  }
+
+ .right {
+    left:400px;
+  }
+  
+  .row1 {
+    top:8px;
+  }
+   .row2 {
+    top:35px;
+  }
+   .row3 {
+    top:78px;
+  }
+   .row4 {
+    top:105px;
+  }
+  .row5 {
+    font-weight: bold;   
+    top:90px;
+  }
+   .row6 {
+     font-weight: bold;    
+    top:118px;
+  }
+   .row7 {
+     font-weight: bold;    
+    top:155px;
+  }
+   .row8 {
+     font-weight: bold;   
+    top:183px;
+  }
+   
+
+ 
+ #drift-pond-scores {
+   position: absolute;
+   left: 680px;
+   top: 365px;
+   width: 600px;
+   height: 220px;
+   border: 2px solid black;
+   background-color: #546378;
+   } 
+
 .leafstack {
   background-image: url('../images/lilypad2.png');
   position: absolute;
@@ -84,3 +148,57 @@ body {
   width: 121px;
    z-index: 5;
 }
+
+
+#status {
+   position: absolute;
+   left: 50px;
+   top: 50px;
+   height: 540px;
+   width: 540px;
+   border: 1px solid black;
+   border-radius: 40px;
+   background-color: rgba(255, 255, 255, 0.8);
+   color: black;
+   font: 20pt sans-serif;
+   text-align: center;
+   padding: 30px;
+   z-index:6;
+   opacity: 0;
+   visibility:hidden;
+   transition: opacity .5s ease-in-out;
+   -moz-transition: opacity .5s ease-in-out;
+   -webkit-transition: opacity .5s ease-in-out;
+}
+
+#intro {
+   position: absolute;
+   left: 50px;
+   top: 50px;
+   height: 540px;
+   width: 540px;
+   border: 1px solid black;
+   border-radius: 40px;
+   background-color: rgba(240, 255, 240, 0.9);
+   color: black;
+   font: 20pt sans-serif;
+   text-align: center;
+   padding: 30px;
+   z-index:6;
+   opacity: 0;
+   visibility:hidden;
+   transition: opacity .5s ease-in-out;
+   -moz-transition: opacity .5s ease-in-out;
+   -webkit-transition: opacity .5s ease-in-out;
+}
+
+#title {
+  font: 24pt sans-serif;
+  font-weight: bold;
+  }
+  
+  #action {
+  font: 24pt sans-serif;
+  color: blue;
+  font-weight: bold;
+  }

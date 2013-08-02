@@ -4,6 +4,8 @@ import 'dart:json';
 import '../core/ntango.dart';
 
 
+num gameLength = 1000;
+
 Element _draggin = null;
 Point latestDelta = new Point(0,0);
 Point dragPointOffset = new Point(0,0);
@@ -11,6 +13,15 @@ String draggingLeaf = "";
 
 CanvasElement canvas = document.query("#drift-pond-pads");
 String turtleBehaviors = "";
+
+var redscore = document.query("#red");
+var yellowscore = document.query("#yellow");
+var bluescore = document.query("#blue");
+var greenscore = document.query("#green");
+var skyscore = document.query("#sky");
+var totalscore = document.query("#total");
+var timescore = document.query("#time");
+
 
 var leafImage = document.query("#leafimage");
 var BackInStackPoint = new Point(660,600);
@@ -60,6 +71,20 @@ void main() {
   
   model.restart();
   model.requestRedraw();
+  model.updateScores();
+  showIntro();
+}
+
+void showIntro() {
+  bindClickEvent("intro", (event) {
+    if (getHtmlOpacity("intro") > 0) {
+      setHtmlOpacity("intro", 0.0);
+      document.query("#intro").style.visibility = "hidden";
+      model.play();
+    }
+  });
+  document.query("#intro").style.visibility = "visible";
+  setHtmlOpacity("intro", 1.0);
 }
 
 
@@ -236,6 +261,61 @@ class DriftModel extends Model {
     plot.maxX = 50;
     addPlot(plot);
   }
+  
+  void tick() {
+    super.tick();
+    updateScores(); 
+    checkForEndGame();
+  }
+  
+  void updateScores() {
+    redscore.text = turtles.where(redTest).length.toString();
+    yellowscore.text = turtles.where(yellowTest).length.toString();
+    greenscore.text = turtles.where(greenTest).length.toString();
+    bluescore.text = turtles.where(blueTest).length.toString();
+    skyscore.text = turtles.where(cyanTest).length.toString();
+    timescore.text = (gameLength - ticks).toString();
+    totalscore.text = turtles.length.toString();
+  }
+  
+  void checkForEndGame() {
+    if (ticks >= gameLength) {
+      int species = 0;
+      num reds = turtles.where(redTest).length;
+      num yellows = turtles.where(yellowTest).length;
+      num greens = turtles.where(greenTest).length;
+      num blues = turtles.where(blueTest).length;
+      num skys = turtles.where(cyanTest).length;
+      
+      if (reds > 0) { species++; }
+      if (yellows > 0) { species++; }
+      if (greens > 0) { species++; }
+      if (blues > 0) { species++; }
+      if (skys > 0) { species++; }
+      
+      String fullLengthMessage = "<div id='title'>GAME OVER!</div><br><br>At the end of the game,<br>you have protected:<br><br>"+redscore.text + " red bugs<br>"+yellowscore.text + " yellow bugs<br>"+greenscore.text + " green bugs<br>"+bluescore.text + " blue bugs<br>and<br>"+skyscore.text + " sky bugs.<br><br><b>So, you saved ${species} species<br>and<br>" + totalscore.text + " bugs in all.</b>";
+      pause();
+      bindClickEvent("status", (event) {
+        if (getHtmlOpacity("status") > 0) {
+          setHtmlOpacity("status", 0.0);
+          document.query("#drift-pond-toolbar").style.visibility = "hidden";
+        }
+      });
+      document.query("#status").style.visibility = "visible";
+      showStatusMessage(fullLengthMessage);
+    } else if ( turtles.length == 0  ) {
+      String allDiedMessage = "<div id='title'><p><p><p>GAME OVER!</div><br><br><p><p>Sadly,<br>all of your bugs died!";
+      pause();
+      bindClickEvent("status", (event) {
+        if (getHtmlOpacity("status") > 0) {
+          setHtmlOpacity("status", 0.0);
+          document.query("#drift-pond-toolbar").style.visibility = "hidden";
+        }
+      });
+      document.query("#status").style.visibility = "visible";
+      showStatusMessage(allDiedMessage);
+    }
+  }
    
  
   //these three methods relate to maintaining fresh drawing of the leaf layer
@@ -331,7 +411,7 @@ class DriftModel extends Model {
     
     String patchBehaviors = """
     [
-      [ "set", "plant-energy", [ "+", "plant-energy", 1 ] ],
+      [ "set", "plant-energy", [ "+", "plant-energy", 2 ] ],
       [ "if", [">", "plant-energy", 100 ], [
           [ "set", "plant-energy", 100 ]
       ] ]
@@ -369,7 +449,7 @@ class PondTurtle extends Turtle {
   void tick() {
     super.tick();
    
-    if (draggingLeaf.length > 0 && latestDelta.x != 0 && latestDelta.y != 0) {
+ /*   if (draggingLeaf.length > 0 && latestDelta.x != 0 && latestDelta.y != 0) {
       Point whereIAM = new Point(x,y);
       if ( findClosestCenterTo(whereIAM) == draggingLeaf)
       {        
@@ -377,6 +457,7 @@ class PondTurtle extends Turtle {
         y += latestDelta.y;
       }
     }
+    */
     var xc = model.worldToScreenX(x, y);
     var yc = model.worldToScreenY(x, y);
     
