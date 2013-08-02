@@ -379,7 +379,7 @@ class DriftModel extends Model {
     //initialized here but given top-level scope.    
     turtleBehaviors = """
     [
-      ["forward", 0.03],
+      ["forward", 0.1],
       ["right", ["random", 20] ],
       ["left", ["random", 20] ],
       ["set", "energy", ["-", "energy", 0.2] ],
@@ -464,7 +464,9 @@ class PondTurtle extends Turtle {
     
     var imdat = canvas.context2D.getImageData(xc, yc, 1, 1).data;
     if (imdat.indexOf(0) > -1) {
-      forward(-0.1);
+      forward(-0.055);
+      xc = model.worldToScreenX(x, y);
+      yc = model.worldToScreenY(x, y);
       imdat = canvas.context2D.getImageData(xc, yc, 1, 1).data;
       if ( imdat[0] == 0 && imdat[1] == 0 && imdat[3] == 0  ) { 
          die(); 
