@@ -268,7 +268,7 @@ class DriftModel extends Model {
     plot.addPen(cyanPen);
 
     plot.minY = 0;
-    plot.maxY = 80;
+    plot.maxY = 40;
     plot.minX = 0;
     plot.maxX = 50;
     addPlot(plot);
