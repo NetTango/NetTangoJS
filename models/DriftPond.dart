@@ -4,7 +4,7 @@ import 'dart:json';
 import '../core/ntango.dart';
 
 
-num gameLength = 1000;
+num gameLength = 700;  //1000
 
 Element _draggin = null;
 Point latestDelta = new Point(0,0);
@@ -84,10 +84,11 @@ void main() {
   model.restart();
   model.requestRedraw();
   model.updateScores();
-  showIntro();
+ // showIntro();
 }
 
 void showIntro() {
+  document.query("#drift-pond-toolbar").style.visibility = "hidden";
   bindClickEvent("intro", (event) {
     if (getHtmlOpacity("intro") > 0) {
       setHtmlOpacity("intro", 0.0);
@@ -259,7 +260,7 @@ class DriftModel extends Model {
     bluePen.updater = (int ticks) { return turtles.where(blueTest).length; };
     plot.addPen(bluePen);
     
-    Pen yellowPen = new Pen("bugs", "yellow");
+    Pen yellowPen = new Pen("bugs", "orange");
     yellowPen.updater = (int ticks) { return turtles.where(yellowTest).length; };
     plot.addPen(yellowPen);
     
@@ -268,7 +269,7 @@ class DriftModel extends Model {
     plot.addPen(cyanPen);
 
     plot.minY = 0;
-    plot.maxY = 40;
+    plot.maxY = 30;
     plot.minX = 0;
     plot.maxX = 50;
     addPlot(plot);
@@ -304,8 +305,9 @@ class DriftModel extends Model {
       if (greens > 0) { species++; }
       if (blues > 0) { species++; }
       if (skys > 0) { species++; }
-      
-      String fullLengthMessage = "<div id='title'>GAME OVER!</div><br><br>At the end of the game,<br>you have protected:<br><br>"+redscore.text + " red bugs<br>"+yellowscore.text + " yellow bugs<br>"+greenscore.text + " green bugs<br>"+bluescore.text + " blue bugs<br>and<br>"+skyscore.text + " sky bugs.<br><br><b>So, you saved ${species} species<br>and<br>" + totalscore.text + " bugs in all.</b>";
+      String all = "";
+      if (species == 5 ) { all = "ALL "; }
+      String fullLengthMessage = "<div id='title'>GAME OVER!</div><br><br>At the end of the game,<br>you have protected:<br><br>"+redscore.text + " red bugs<br>"+yellowscore.text + " orange bugs<br>"+greenscore.text + " green bugs<br>"+bluescore.text + " blue bugs<br>and<br>"+skyscore.text + " sky bugs.<br><br><b>So, you saved "+all+"${species} species<br>and<br>" + totalscore.text + " bugs in all.</b>";
       pause();
       bindClickEvent("status", (event) {
         if (getHtmlOpacity("status") > 0) {
@@ -376,16 +378,17 @@ class DriftModel extends Model {
   
   //setup the model. 
   void setup() {
-
+    showIntro();
+    
     clearTurtles();
     clearPatches();
     initPatches();
       
     turtleColors = [
                 new Color(255, 0, 0, 255),
-                new Color(0, 255, 0, 255),
+                new Color(0, 204, 0, 255),
                 new Color(0, 0, 255, 255),
-                new Color(255, 255, 0, 255),
+                new Color(255, 153, 0, 255),
                 new Color(0, 255, 255, 255)];
     
     //initialized here but given top-level scope.    
@@ -395,10 +398,10 @@ class DriftModel extends Model {
       ["right", ["random", 20] ],
       ["left", ["random", 20] ],
       ["set", "energy", ["-", "energy", 0.2] ],
-      ["if", [ "<=", "energy", 0], [ "die"] ],
+      ["if", [ "<=", "energy", 43], [ "die"] ],
       ["ask", ["patch-here"], [
           [ "if", [ ">", "plant-energy", 0 ], [
-              [ "set", "plant-energy", [ "-", "plant-energy", 5 ] ],
+              [ "set", "plant-energy", [ "-", "plant-energy", 7 ] ],
               [ "set", "energy", [ "+", "energy", 4] ]
           ] ]
       ] ],
@@ -413,11 +416,22 @@ class DriftModel extends Model {
     Expression behavior = new Expression(parse(turtleBehaviors));
     
     
-    for (int i=0; i<TURTLE_COUNT; i++) {  
+    for (int i=0; i<TURTLE_COUNT / 3; i++) {  
       PondTurtle t = new PondTurtle(this);
-      t["energy"] = 100;
+      t["energy"] = 85;
       t.color = turtleColors[i % 5].clone();
       t.setBehavior(behavior);
+      addTurtle(t);
+    }
+    
+    for (int i=0; i<TURTLE_COUNT / 3; i++) {  
+      PondTurtle t = new PondTurtle(this);
+      t["energy"] = 85;
+      t.color = turtleColors[i % 5].clone();
+      t.setBehavior(behavior);
+      t.x = this.screenToWorldX(400,100);
+      t.y = this.screenToWorldY(400,100);
+      
       addTurtle(t);
     }
     
@@ -461,18 +475,21 @@ class PondTurtle extends Turtle {
   void tick() {
     super.tick();
    
- /*   if (draggingLeaf.length > 0 && latestDelta.x != 0 && latestDelta.y != 0) {
-      Point whereIAM = new Point(x,y);
+    var xc = model.worldToScreenX(x, y);
+    var yc = model.worldToScreenY(x, y);
+    
+    if (draggingLeaf.length > 0 && latestDelta.x != 0 && latestDelta.y != 0) {
+      Point whereIAM = new Point(xc,yc);
       if ( findClosestCenterTo(whereIAM) == draggingLeaf)
       {        
         x += latestDelta.x;
         y += latestDelta.y;
       }
     }
-    */
-    var xc = model.worldToScreenX(x, y);
-    var yc = model.worldToScreenY(x, y);
     
+   
+    
+    //if (this["energy"] < 45){ print("would die at 45: " + this["energy"].toString()); }
     var imdat = canvas.context2D.getImageData(xc, yc, 1, 1).data;
     if (imdat.indexOf(0) > -1) {
       forward(-0.05);
@@ -483,7 +500,7 @@ class PondTurtle extends Turtle {
          die(); 
        }
       else {
-        right(175);
+        right(175 + rnd.nextInt(10));
       }
     } 
   }
