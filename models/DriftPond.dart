@@ -24,6 +24,8 @@ var timescore = document.query("#time");
 
 
 var leafImage = document.query("#leafimage");
+bool paused = false;
+var pauseResumeButton = document.query("#presume");
 var BackInStackPoint = new Point(660,600);
 int leafIndex = 0;
 Map<String,Point> locationOfLeaf = new Map<String,Point>();
@@ -66,6 +68,9 @@ void main() {
   locationOfLeaf["2"] = new Point(450,450);
   //end code to toggle
   
+  pauseResumeButton.onTouchEnd.listen( pauseOrResumeTouch );
+  pauseResumeButton.onMouseUp.listen( pauseOrResumeMouse );
+  
   var topCanv = document.query("#drift-pond-turtles");
   topCanv.onMouseDown.listen( startAdjustingLeaf );
   topCanv.onTouchStart.listen( startTouchAdjustingLeaf );
@@ -87,13 +92,38 @@ void main() {
  // showIntro();
 }
 
+
+void pauseOrResumeTouch(TouchEvent event) {
+  pauseOrResume();
+}
+
+void pauseOrResumeMouse(MouseEvent event) {
+  pauseOrResume();
+}
+
+void pauseOrResume() {
+  if (paused) {
+    model.play();
+    pauseResumeButton.value="pause";
+    pauseResumeButton.style.backgroundColor="#CCCC78";
+  }
+  else {
+    model.pause();
+    pauseResumeButton.value="resume";
+    pauseResumeButton.style.backgroundColor="#54BB78";
+  }
+  paused = !paused;
+}
+
 void showIntro() {
   document.query("#drift-pond-toolbar").style.visibility = "hidden";
+  pauseResumeButton.style.visibility="hidden";
   bindClickEvent("intro", (event) {
     if (getHtmlOpacity("intro") > 0) {
       setHtmlOpacity("intro", 0.0);
       document.query("#intro").style.visibility = "hidden";
       model.play();
+      pauseResumeButton.style.visibility="visible";
     }
   });
   document.query("#intro").style.visibility = "visible";
@@ -293,6 +323,7 @@ class DriftModel extends Model {
   
   void checkForEndGame() {
     if (ticks >= gameLength) {
+      pauseResumeButton.style.visibility = "hidden";
       int species = 0;
       num reds = turtles.where(redTest).length;
       num yellows = turtles.where(yellowTest).length;

@@ -15,14 +15,14 @@
    <canvas id="drift-pond-pads" width="600" height="600" draggable="false"></canvas>
    <canvas id="drift-pond-turtles" width="600" height="600" draggable="false"></canvas>    
    
-  <div style="position: absolute; top: 600px; left: 660px;"><img src="../images/lilypad3.png" width="121" height="100" id="leafimage"></div>
+  <div style="position: absolute; top: 600px; left: 660px; visibility:hidden;"><img src="../images/lilypad3.png" width="121" height="100" id="leafimage" ></div>
    
-  <span class="leafmoving" style="top:600px; left:660px" id="leafmoving" name="leafmoving" draggable="false"></span>
-  <span class="leafstack" style="top:600px; left:660px" id="leafstack" name="leafstack" draggable="false"></span> 
+  <span class="leafmoving" style="top:600px; left:660px; visibility:hidden;" id="leafmoving" name="leafmoving" draggable="false" ></span>
+  <span class="leafstack" style="top:600px; left:660px; visibility:hidden;" id="leafstack" name="leafstack" draggable="false"></span> 
   
    
    <!-- TOOLBAR -->
-   <div id="drift-pond-toolbar" class="toolbar">
+   <div id="drift-pond-toolbar" class="toolbar" visibility="hidden">
       <div>
          <button id="restart-button"></button>
          <button id="stepback-button"></button>
@@ -59,6 +59,9 @@
        <span class="score middle row7">Time Left</span>
      <span class="score middle row8" id="time"></span>
    </div>
+   
+     <input type="button" id="presume" value="pause" style="visibility:hidden;"></input>
+   
 
 <div id="status"></div>
 <div id="intro">

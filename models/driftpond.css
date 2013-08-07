@@ -16,6 +16,8 @@ body {
    background-color: #445368;
 }
 
+
+
 #drift-pond-patches {
    background-image: url('../images/water.png');
    background-size: cover;
@@ -130,6 +132,22 @@ body {
    border: 2px solid black;
    background-color: #546378;
    } 
+
+
+  
+  #presume {
+    position: absolute;  
+    left: 680px;
+   top: 600px;
+   width: 600px;
+   height: 50px;
+   border: 2px solid black;
+   border-radius: 10px;
+   font: 14pt sans-serif;
+   text-align: center;
+   background-color: #CCCC78;
+    }  
+
 
 .leafstack {
   background-image: url('../images/lilypad2.png');
