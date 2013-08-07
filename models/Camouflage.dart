@@ -77,6 +77,7 @@ class CamoTurtle extends Turtle {
     copy.color.blue += (10 - Turtle.rnd.nextInt(20));
     copy.right(Turtle.rnd.nextInt(360));
     copy.forward(Turtle.rnd.nextDouble());
+    // Test if it is too close to the border
     model.addTurtle(copy);
   }
 }
