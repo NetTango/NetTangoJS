@@ -386,7 +386,7 @@ class DriftModel extends Model {
       
     turtleColors = [
                 new Color(255, 0, 0, 255),
-                new Color(0, 204, 0, 255),
+                new Color(0, 234, 30, 255),
                 new Color(0, 0, 255, 255),
                 new Color(255, 153, 0, 255),
                 new Color(0, 255, 255, 255)];
