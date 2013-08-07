@@ -109,7 +109,7 @@ class DriftModel extends Model {
     behavior = new Expression(parse(behaviors));
     
     for (Patch patch in patches) {
-      patch.color.setColor(0, 100, 0, 255);
+      patch.color.setColor(0, 100, 0, 100);
       patch.setBehavior(behavior);
       patch["plant-energy"] = 100;
     }

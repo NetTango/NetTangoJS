@@ -17,7 +17,7 @@ class DriftModel extends Model {
    final int TURTLE_COUNT = 60;
   
    
-   DriftModel() : super() { 
+   DriftModel() : super("","") { 
      
      patchSize = 20;
      

@@ -138,14 +138,17 @@ class Turtle extends Agent implements Touchable {
   
   
   void draw(var ctx) {
-    roundRect(ctx, -0.2, -0.5, 0.4, 1, 0.2);
+    roundRect(ctx, -0.1, -0.1, 0.2, 0.2, 0.1);
     ctx.fillStyle = color.toString();
     ctx.fill();
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.5)";
+    ctx.strokeStyle = "rgba(0, 0, 0, 0.5)";
     ctx.lineWidth = 0.05;
     ctx.stroke();
   }
   
+ 
+  
+ 
   
   Patch patchHere() {
     return model.patchAt(x, y);

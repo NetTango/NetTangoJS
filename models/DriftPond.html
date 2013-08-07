@@ -1,0 +1,48 @@
+<!DOCTYPE html> 
+<html> 
+<head> 
+   <title>NetTango: Drift Pond</title>
+   <meta charset="utf-8">
+   <meta name="apple-mobile-web-app-capable" content="yes">
+   <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+   <link rel="stylesheet" href="../css/toolbar.css">
+   <link rel="stylesheet" href="driftpond.css">
+</head> 
+<body>
+
+   <!-- WORLD VIEW -->   
+   <canvas id="drift-pond-patches" width="600" height="600" draggable="false"></canvas>
+   <canvas id="drift-pond-pads" width="600" height="600" draggable="false"></canvas>
+   <canvas id="drift-pond-turtles" width="600" height="600" draggable="false"></canvas>    
+   
+  <div style="position: absolute; top: 600px; left: 660px;"><img src="../images/lilypad3.png" width="121" height="100" id="leafimage"></div>
+   
+  <span class="leafmoving" style="top:600px; left:660px" id="leafmoving" name="leafmoving" draggable="false"></span>
+  <span class="leafstack" style="top:600px; left:660px" id="leafstack" name="leafstack" draggable="false"></span>
+  
+   
+   <!-- TOOLBAR -->
+   <div id="drift-pond-toolbar" class="toolbar">
+      <div>
+         <button id="restart-button"></button>
+         <button id="stepback-button"></button>
+         <button id="rewind-button"></button>
+         <button id="play-button"></button>
+         <button id="fastforward-button"></button>
+         <button id="stepforward-button"></button>
+         <button id="fullscreen-button"></button>
+      </div>
+      <input type="range" id="ticker" min="0" max="1000" step="1" value="0">
+      <div id="tick-count">tick: 0</div>
+   </div>
+   
+   
+      <!-- PLOT -->   
+   <div id="drift-pond-plot"></div>
+
+
+   <!-- DART SCRIPT -->    
+   <script src="DriftPond.dart" type="application/dart"></script>
+   <script src="../core/dart.js"></script>
+</body>
+</html>
