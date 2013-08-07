@@ -25,8 +25,9 @@ class CamoModel extends Model {
     for (int i=0; i<TURTLE_COUNT; i++) {
       CamoTurtle t = new CamoTurtle(this);
       addTurtle(t);
-      t.setXY(Model.rnd.nextInt(worldWidth) - worldWidth / 2, 
-              Model.rnd.nextInt(worldHeight) - worldHeight / 2);
+      t.setXY(Model.rnd.nextDouble() * worldWidth - worldWidth / 2, 
+              Model.rnd.nextDouble() * worldHeight - worldHeight / 2);
+      t.stayWithinBoundaries();
     }
   }
 
@@ -63,7 +64,7 @@ class CamoTurtle extends Turtle {
     ctx.beginPath();
     ctx.arc(0, 0, 0.3, 0, PI * 2, true);
     ctx.fillStyle = color.toString();
-    ctx.fill();
+    ctx.fill(); 
   }
    
    
@@ -77,7 +78,16 @@ class CamoTurtle extends Turtle {
     copy.color.blue += (10 - Turtle.rnd.nextInt(20));
     copy.right(Turtle.rnd.nextInt(360));
     copy.forward(Turtle.rnd.nextDouble());
-    // Test if it is too close to the border
     model.addTurtle(copy);
   }
+  
+  void stayWithinBoundaries(){
+    print("testing " + this.id.toString());
+    if (x >= model.maxPatchX) {x--;}
+    if (x <= model.minPatchX) {x++;}
+    if (y >= model.maxPatchY) {y--;}
+    if (y <= model.minPatchY) {y++;}
+  }
+  
+  
 }
