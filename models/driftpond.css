@@ -145,7 +145,23 @@ body {
    border-radius: 10px;
    font: 14pt sans-serif;
    text-align: center;
+   color:black;
    background-color: #CCCC78;
+    }  
+
+
+#restart_button {
+    position: absolute;  
+    left: 660px;
+   top: 580px;
+   width: 600px;
+   height: 50px;
+   border: 2px solid black;
+   border-radius: 10px;
+   font: 14pt sans-serif;
+   text-align: center;
+   color:white;
+   background-color: #2222EE;
     }  
 
 

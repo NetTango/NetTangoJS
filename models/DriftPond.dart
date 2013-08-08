@@ -344,6 +344,7 @@ class DriftModel extends Model {
         if (getHtmlOpacity("status") > 0) {
           setHtmlOpacity("status", 0.0);
           document.query("#drift-pond-toolbar").style.visibility = "hidden";
+          setupRestartButton();
         }
       });
       document.query("#status").style.visibility = "visible";
@@ -355,6 +356,7 @@ class DriftModel extends Model {
         if (getHtmlOpacity("status") > 0) {
           setHtmlOpacity("status", 0.0);
           document.query("#drift-pond-toolbar").style.visibility = "hidden";
+          setupRestartButton();
         }
       });
       document.query("#status").style.visibility = "visible";
@@ -362,6 +364,13 @@ class DriftModel extends Model {
     }
   }
    
+  void setupRestartButton() {
+    InputElement restrt = document.query("#restart_button");
+    restrt.style.visibility = "visible";
+    bindClickEvent("restart_button", (event) {
+      window.location.reload();
+    });
+  }
  
   //these three methods relate to maintaining fresh drawing of the leaf layer
   //i have left them within the model class b/c turtles are interacting with it. 
