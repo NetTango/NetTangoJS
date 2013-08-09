@@ -65,7 +65,7 @@ void main() {
   document.query("#leafimage").style.visibility = "hidden";
   locationOfLeaf["0"] = new Point(50,350);
   locationOfLeaf["1"] = new Point(350,50);
-  locationOfLeaf["2"] = new Point(450,450);
+  locationOfLeaf["2"] = new Point(380,350);
   //end code to toggle
   
   locationOfLeaf["3"] = new Point(80, 50);
@@ -522,15 +522,19 @@ class PondTurtle extends Turtle {
     var xc = model.worldToScreenX(x, y);
     var yc = model.worldToScreenY(x, y);
     
+    /*
+    
     if (draggingLeaf.length > 0 && latestDelta.x != 0 && latestDelta.y != 0) {
       Point whereIAM = new Point(xc,yc);
       if ( findClosestCenterTo(whereIAM) == draggingLeaf)
       {        
-        x += latestDelta.x;
-        y += latestDelta.y;
+       // x = model.screenToWorldX(locationOfLeaf[draggingLeaf].x, locationOfLeaf[draggingLeaf].y) + 110;
+      //  y = model.screenToWorldY(locationOfLeaf[draggingLeaf].x, locationOfLeaf[draggingLeaf].y) + 100;
+        //x += latestDelta.x;
+        //y += latestDelta.y;
       }
     }
-    
+    */
    
     
     //if (this["energy"] < 45){ print("would die at 45: " + this["energy"].toString()); }
