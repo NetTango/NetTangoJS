@@ -68,6 +68,10 @@ void main() {
   locationOfLeaf["2"] = new Point(450,450);
   //end code to toggle
   
+  locationOfLeaf["3"] = new Point(80, 50);
+  locationOfLeaf["4"] = new Point(450,150);
+  locationOfLeaf["5"] = new Point(150,400);
+  
   pauseResumeButton.onTouchEnd.listen( pauseOrResumeTouch );
   pauseResumeButton.onMouseUp.listen( pauseOrResumeMouse );
   
