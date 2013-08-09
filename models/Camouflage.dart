@@ -59,14 +59,44 @@ class CamoTurtle extends Turtle {
    
   void tick() { }
    
-   
-  void draw(CanvasRenderingContext2D ctx) {
+//   
+//  void draw(CanvasRenderingContext2D ctx) {
+//    ctx.beginPath();
+//    ctx.arc(0, 0, 0.3, 0, PI * 2, true);
+//    ctx.fillStyle = color.toString();
+//    ctx.fill(); 
+//  }
+//   
+  
+  void draw(var ctx) {
+    drawLegs(ctx, 0, 0, 0.1);
+    //roundRect(ctx, -0.1, -0.1, 0.2, 0.2, 0.1);
     ctx.beginPath();
-    ctx.arc(0, 0, 0.3, 0, PI * 2, true);
+    ctx.arc(0, 0, 0.1, 0, PI * 2, true);
     ctx.fillStyle = color.toString();
-    ctx.fill(); 
+    ctx.fill();
+    ctx.strokeStyle = color.toString();
+    ctx.lineWidth = 0.05;
+    ctx.stroke();
   }
-   
+  
+  void drawLegs(CanvasRenderingContext2D ctx, num x, num y, num r) {
+    //double d = Turtle.rnd.nextDouble() * 1.5 * r;
+    double d = 1.5 * r;
+    
+    ctx.beginPath();
+    ctx.moveTo(x+2*r,y+d);
+    ctx.lineTo(x-2*r,y-d);
+    ctx.moveTo(x+2*r,y);
+    ctx.lineTo(x-2*r,y);
+    ctx.moveTo(x+2*r,y-d);
+    ctx.lineTo(x-2*r,y+d);
+    ctx.lineWidth = 0.02;
+    ctx.strokeStyle = color.toString();
+    ctx.stroke();
+  }
+  
+  
    
   void reproduce() {
     CamoTurtle copy = new CamoTurtle(model);
@@ -82,7 +112,6 @@ class CamoTurtle extends Turtle {
   }
   
   void stayWithinBoundaries(){
-    print("testing " + this.id.toString());
     if (x >= model.maxPatchX) {x--;}
     if (x <= model.minPatchX) {x++;}
     if (y >= model.maxPatchY) {y--;}
