@@ -8,7 +8,7 @@ num gameLength = 700;  //1000
 bool onComputer = true;
 
 //defaults for the standard leaf
-num xDragOffset = 55;
+num xDragOffset = 60;
 num yDragOffset = 50;
 num scrOffset = 30;
 
@@ -572,13 +572,19 @@ class PondTurtle extends Turtle {
   void draw(var ctx) {
     drawLegs(ctx, 0, 0, 0.1);
     //roundRect(ctx, -0.1, -0.1, 0.2, 0.2, 0.1);
+    
+    //ctx.fillStyle="#AAAAAA";              
+    //ctx.fillRect(-.1,-.1,0.2,0.05);
+    //ctx.globalCompositeOperation = 'destination-atop';
     ctx.beginPath();
     ctx.arc(0, 0, 0.1, 0, PI * 2, true);
     ctx.fillStyle = color.toString();
     ctx.fill();
+   
     ctx.strokeStyle = "rgba(10, 10, 10, 0.5)";
     ctx.lineWidth = 0.05;
     ctx.stroke();
+    ctx.closePath();
   }
   
   void drawLegs(CanvasRenderingContext2D ctx, num x, num y, num r) {
