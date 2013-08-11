@@ -5,6 +5,12 @@ import '../core/ntango.dart';
 
 
 num gameLength = 700;  //1000
+bool onComputer = true;
+
+//defaults for the standard leaf
+num xDragOffset = 55;
+num yDragOffset = 50;
+num scrOffset = 30;
 
 Element _draggin = null;
 Point latestDelta = new Point(0,0);
@@ -51,7 +57,7 @@ bool yellowTest(Turtle t) { return colorsAreEqual(t.color, turtleColors[3]); }
 bool cyanTest(Turtle t) { return colorsAreEqual(t.color, turtleColors[4]); }
 
 void main() {
-  locationOfLeaf["-1"] = new Point(250,250);
+  locationOfLeaf["-1"] = new Point(250 + xDragOffset,250+yDragOffset);
   var leafstack = document.query("#leafstack");
   
   //uncomment these 2 lines and re-comment subsequent ones for default behavior
@@ -63,14 +69,16 @@ void main() {
   leafstack.style.visibility = "hidden";
   document.query("#leafmoving").style.visibility = "hidden";
   document.query("#leafimage").style.visibility = "hidden";
-  locationOfLeaf["0"] = new Point(50,350);
-  locationOfLeaf["1"] = new Point(350,50);
-  locationOfLeaf["2"] = new Point(380,350);
-  //end code to toggle
+  locationOfLeaf["0"] = new Point(50+xDragOffset,350+yDragOffset);
+  locationOfLeaf["1"] = new Point(350+xDragOffset,50+yDragOffset);
+  locationOfLeaf["2"] = new Point(380+xDragOffset,350+yDragOffset);
   
-  locationOfLeaf["3"] = new Point(80, 50);
-  locationOfLeaf["4"] = new Point(450,150);
-  locationOfLeaf["5"] = new Point(150,400);
+  locationOfLeaf["3"] = new Point(80+xDragOffset, 50+yDragOffset);
+  locationOfLeaf["4"] = new Point(450+xDragOffset,150+yDragOffset);
+  locationOfLeaf["5"] = new Point(150+xDragOffset,400+yDragOffset);
+  
+  //end code to toggle
+
   
   pauseResumeButton.onTouchEnd.listen( pauseOrResumeTouch );
   pauseResumeButton.onMouseUp.listen( pauseOrResumeMouse );
@@ -102,18 +110,20 @@ void pauseOrResumeTouch(TouchEvent event) {
 }
 
 void pauseOrResumeMouse(MouseEvent event) {
-  pauseOrResume();
+  if (onComputer){
+    pauseOrResume(); 
+  }
 }
 
 void pauseOrResume() {
   if (paused) {
     model.play();
-    pauseResumeButton.value="pause";
+    pauseResumeButton.value="Freeze Bugs";
     pauseResumeButton.style.backgroundColor="#CCCC78";
   }
   else {
     model.pause();
-    pauseResumeButton.value="resume";
+    pauseResumeButton.value="Unfreeze Bugs";
     pauseResumeButton.style.backgroundColor="#54BB78";
   }
   paused = !paused;
@@ -135,27 +145,28 @@ void showIntro() {
 }
 
 
+
 //touch-move an already-placed leaf
 void startTouchAdjustingLeaf( TouchEvent event ) {
   if (event.changedTouches.length > 0 ) {
     Touch t = event.changedTouches[0];
-    Point testPoint = new Point(t.client.x - 110, t.client.y - 100);
+    Point testPoint = new Point(t.client.x - scrOffset, t.client.y - scrOffset);
     String wLeaf = findClosestCenterTo(testPoint);
     num dist = testPoint.distanceTo(locationOfLeaf[wLeaf]);
     if ( dist < 50 ) {
       draggingLeaf = wLeaf;
-      findDragPointOffset( testPoint );
+      findDragPointOffset( new Point(testPoint.x + scrOffset, testPoint.y + scrOffset)  );
     }
   }
 }
 //move an already-placed leaf
 void startAdjustingLeaf( MouseEvent evt ) {
-  Point testPoint = new Point(evt.clientX - 110, evt.clientY - 100);
+  Point testPoint = new Point(evt.client.x - scrOffset, evt.client.y - scrOffset);
   String wLeaf = findClosestCenterTo(testPoint);
   num dist = testPoint.distanceTo(locationOfLeaf[wLeaf]);
   if ( dist < 50 ) {
     draggingLeaf = wLeaf;
-    findDragPointOffset( testPoint );
+    findDragPointOffset( new Point(testPoint.x + scrOffset, testPoint.y + scrOffset) );
   }
 }
 
@@ -175,9 +186,9 @@ String findClosestCenterTo(Point testPoint) {
 //dragHandlerForAllMouseInteractions
 void maybeMove( MouseEvent event ) {
   if (_draggin != null) {
-    updateDraggin( event.clientX, event.clientY );
+    updateDraggin( event.client.x, event.client.y );
   } else if ( draggingLeaf.length > 0 ) {
-    repositionLeaf( event.clientX - 110, event.clientY - 100 );
+    repositionLeaf( event.client.x, event.client.y  );
   }
 }
 
@@ -188,7 +199,7 @@ void maybeTouchMove( TouchEvent event ) {
     if (_draggin != null) {
       updateDraggin( t.client.x, t.client.y );
     } else if ( draggingLeaf.length > 0 ) {
-      repositionLeaf( t.client.x - 110, t.client.y - 100 );
+      repositionLeaf( t.client.x , t.client.y  );
     }
   }
 }
@@ -212,8 +223,8 @@ void repositionLeaf( nx, ny ) {
 
 //actually move the not-yet placed leaf div-icon
 void updateDraggin(x, y) {
-  _draggin.style.left = (x - 60).toString() + "px";
-  _draggin.style.top = (y - 50).toString() + "px";
+  _draggin.style.left = (x - xDragOffset).toString() + "px";
+  _draggin.style.top = (y - yDragOffset).toString() + "px";
 }
 
 
@@ -239,7 +250,7 @@ void touchStart(TouchEvent event) {
 //reset state back to not-dragging (general mouse-up handler)
 void dragStop(MouseEvent event) {
   if (_draggin != null) {
-    locationOfLeaf[(leafIndex.toString()) ] = new Point(event.clientX - 110, event.clientY - 100);
+    locationOfLeaf[(leafIndex.toString()) ] = new Point(event.client.x , event.client.y );
     _draggin.style.left = BackInStackPoint.x.toString() + "px";
     _draggin.style.top = BackInStackPoint.y.toString() + "px";
     _draggin.style.zIndex="5";
@@ -257,7 +268,7 @@ void touchStop(TouchEvent event) {
   if (event.changedTouches.length > 0 ) {
     Touch t = event.changedTouches[0];
     if (_draggin != null) {
-      locationOfLeaf[(leafIndex.toString()) ] = new Point(t.client.x - 110, t.client.y - 100);
+      locationOfLeaf[(leafIndex.toString()) ] = new Point(t.client.x , t.client.y );
       _draggin.style.left = BackInStackPoint.x.toString() + "px";
       _draggin.style.top = BackInStackPoint.y.toString() + "px";
       _draggin.style.zIndex="5";
@@ -388,10 +399,10 @@ class DriftModel extends Model {
     context.fillRect(0,0,600,600);
     
     for (var v in locationOfLeaf.keys) {
-      var destX = locationOfLeaf[v].x;
-      var destY = locationOfLeaf[v].y;
-      var destWidth = 121;
-      var destHeight = 100;
+      var destX = locationOfLeaf[v].x - xDragOffset;
+      var destY = locationOfLeaf[v].y - yDragOffset;
+      var destWidth = xDragOffset * 2;
+      var destHeight = yDragOffset * 2;
       var source = leafImage;
       context.globalAlpha = 0.0;
       
@@ -406,7 +417,7 @@ class DriftModel extends Model {
       
       //draw the leaf now.
       context.globalAlpha = 1;
-      context.drawImage(source, destX, destY);//, destWidth, destHeight);
+      context.drawImageScaled(source, destX, destY, destWidth, destHeight);//, destWidth, destHeight);
     }
     
   }
@@ -503,6 +514,11 @@ class DriftModel extends Model {
 
 
 
+double weightedAverage( num one, num two, num weightOfOne ) {
+  return (one * weightOfOne + two) / (weightOfOne + 1);
+}
+
+
 
 //PondTurtle class.  I had some trouble getting this implementation to be able to access the
 //private variables of Turtle.  I think this is because of the "library private" nature of 
@@ -522,19 +538,19 @@ class PondTurtle extends Turtle {
     var xc = model.worldToScreenX(x, y);
     var yc = model.worldToScreenY(x, y);
     
-    /*
     
-    if (draggingLeaf.length > 0 && latestDelta.x != 0 && latestDelta.y != 0) {
+    if (draggingLeaf.length > 0 && (latestDelta.x != 0 || latestDelta.y != 0) ) {
       Point whereIAM = new Point(xc,yc);
       if ( findClosestCenterTo(whereIAM) == draggingLeaf)
       {        
-       // x = model.screenToWorldX(locationOfLeaf[draggingLeaf].x, locationOfLeaf[draggingLeaf].y) + 110;
-      //  y = model.screenToWorldY(locationOfLeaf[draggingLeaf].x, locationOfLeaf[draggingLeaf].y) + 100;
-        //x += latestDelta.x;
-        //y += latestDelta.y;
+        if ( locationOfLeaf[draggingLeaf].distanceTo(new Point(xc, yc)) > 40 ) {
+          Point leafCenter = locationOfLeaf[draggingLeaf];
+          Point newSpot = new Point(weightedAverage( xc, leafCenter.x, 3 ), weightedAverage( yc, leafCenter.y, 3 ));
+          x = model.screenToWorldX( newSpot.x, newSpot.y );
+          y = model.screenToWorldY( newSpot.x, newSpot.y );
+        }
       }
     }
-    */
    
     
     //if (this["energy"] < 45){ print("would die at 45: " + this["energy"].toString()); }
