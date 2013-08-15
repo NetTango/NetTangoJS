@@ -4,8 +4,8 @@ import 'dart:json';
 import '../core/ntango.dart';
 
 
-num gameLength = 700;  //1000
-bool onComputer = true;
+num gameLength = 600;  //1000
+bool onComputer = false;
 
 //defaults for the standard leaf
 num xDragOffset = 60;
@@ -160,13 +160,12 @@ void showIntro() {
 void startTouchAdjustingLeaf( TouchEvent event ) {
   
   for ( Touch t  in event.changedTouches ) {
-    window.alert("got a touch, id = " + t.identifier.toString()); 
     Point testPoint = new Point(t.client.x - scrOffset, t.client.y - scrOffset);
     String wLeaf = findClosestCenterTo(testPoint);
     num dist = testPoint.distanceTo(locationOfLeaf[wLeaf]);
     if ( dist < 50 ) {
       touchDraggingLeaves[t.identifier] = wLeaf;
-      findTouchPointOffset( t.identifier,  new Point(testPoint.x + scrOffset, testPoint.y + scrOffset)  );
+      findTouchPointOffset( t.identifier, wLeaf,  new Point(testPoint.x + scrOffset, testPoint.y + scrOffset)  );
     }
   }  
 }
@@ -220,8 +219,8 @@ void findDragPointOffset(Point clickPoint) {
   dragPointOffset = locationOfLeaf[draggingLeaf] - clickPoint;
 }
 
-void findTouchPointOffset(int identifier, Point clickPoint) {
-  touchPointOffsets[identifier] = locationOfLeaf[draggingLeaf] - clickPoint;
+void findTouchPointOffset(int identifier, String theLeaf, Point clickPoint) {
+  touchPointOffsets[identifier] = locationOfLeaf[theLeaf] - clickPoint;
 }
 
 void repositionTouchLeaf( int id, String theLeaf, num nx, num ny) {
@@ -608,8 +607,8 @@ class PondTurtle extends Turtle {
         num dy = latestTouchDelta[myLeaf].y;
         if ( dx != 0 || dy > 0 ) {
           if ( locationOfLeaf[myLeaf].distanceTo(new Point(xc, yc)) > 40 ) {
-            Point leafCenter = locationOfLeaf[draggingLeaf];
-            Point newSpot = new Point(weightedAverage( xc, leafCenter.x, 3 ), weightedAverage( yc, leafCenter.y, 3 ));
+            Point leafCenter = locationOfLeaf[myLeaf];
+            Point newSpot = new Point(weightedAverage( xc, leafCenter.x, 2 ), weightedAverage( yc, leafCenter.y, 2 ));
             x = model.screenToWorldX( newSpot.x, newSpot.y );
             y = model.screenToWorldY( newSpot.x, newSpot.y );
           }
