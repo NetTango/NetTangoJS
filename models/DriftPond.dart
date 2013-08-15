@@ -356,20 +356,22 @@ class DriftModel extends Model {
     b = turtles.where(blueTest).length;
     s = turtles.where(cyanTest).length;
     
+    print(redscore.style);
+    
     redscore.text = r.toString();
-    if (r == 0){ redscore.style="background-color:black"; }
+    if (r == 0){ redscore.style.backgroundColor="#94A3B8"; }
     
     yellowscore.text = y.toString();
-    if (y == 0){ yellowscore.style="background-color:black"; }
+    if (y == 0){ yellowscore.style.backgroundColor="#94A3B8"; }
     
     greenscore.text = g.toString();
-    if (g == 0){ greenscore.style="background-color:black"; }
+    if (g == 0){ greenscore.style.backgroundColor="#94A3B8"; }
     
     bluescore.text = b.toString();
-    if (b == 0){ bluescore.style="background-color:black"; }
+    if (b == 0){ bluescore.style.backgroundColor="#94A3B8"; }
     
     skyscore.text = s.toString();
-    if (s == 0){ skyscore.style="background-color:black"; }
+    if (s == 0){ skyscore.style.backgroundColor="#94A3B8"; }
     
     timescore.text = (gameLength - ticks).toString();
     totalscore.text = turtles.length.toString();
