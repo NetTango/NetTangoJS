@@ -11,7 +11,7 @@ bool goForever = false;
 //defaults for the standard leaf
 num xDragOffset = 60;
 num yDragOffset = 50;
-num scrOffset = 30;
+num scrOffset = 10;
 
 Element _draggin = null;
 Point latestDelta = new Point(0,0);
@@ -62,6 +62,8 @@ bool yellowTest(Turtle t) { return colorsAreEqual(t.color, turtleColors[3]); }
 bool cyanTest(Turtle t) { return colorsAreEqual(t.color, turtleColors[4]); }
 
 void main() {
+  window.onContextMenu.listen((event){event.preventDefault();});
+  
   locationOfLeaf["-1"] = new Point(250 + xDragOffset,250+yDragOffset);
   var leafstack = document.query("#leafstack");
   
@@ -114,7 +116,7 @@ void main() {
 void changeChallenge(KeyboardEvent event) {
   int theKey = event.keyCode;
   if (theKey == 90) {
-    gameLength += 1000;
+    gameLength += 500;
     model.updateScores();
   }
   //document.query("#bodytext").text = "hi";
@@ -348,7 +350,7 @@ class DriftModel extends Model {
     plot.addPen(cyanPen);
 
     plot.minY = 0;
-    plot.maxY = 30;
+    plot.maxY = 25;
     plot.minX = 0;
     plot.maxX = 50;
     addPlot(plot);

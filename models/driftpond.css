@@ -16,36 +16,42 @@ body {
    background-color: #445368;
 }
 
-
+#background {
+  left:0px;
+  top:0px;
+  width:1265px;
+  height:600px;
+  z-index: -1;
+}
 
 #drift-pond-patches {
    background-image: url('../images/water.png');
    background-size: cover;
    position: absolute;
-   left: 30px;
-   top: 30px;
+   left: 10px;
+   top: 10px;
    z-index: 0;
 }
 
 #drift-pond-pads {
    position: absolute;
-   left: 30px;
-   top: 30px;
+   left: 10px;
+   top: 10px;
    z-index: 1;
 }
 
 #drift-pond-turtles {
    position: absolute;
-   left: 30px;
-   top: 30px;
+   left: 10px;
+   top: 10px;
    z-index: 3;
 }
 
 /*sheen not currently used -- need a better approach */
 #drift-pond-sheen {
    position: absolute;
-   left: 30px;
-   top: 30px;
+   left: 10px;
+   top: 10px;
    height: 596px;
    width: 596px;
    z-index: 2;
@@ -60,8 +66,8 @@ body {
 
 #drift-pond-plot {
    position: absolute;
-   left: 660px;
-   top: 30px;
+   left: 620px;
+   top: 10px;
    width: 600px;
    height: 300px;
    border: 1px solid black;
@@ -71,8 +77,8 @@ body {
 
 #drift-pond-scores {
    position: absolute;
-   left: 660px;
-   top: 345px;
+   left: 620px;
+   top: 325px;
    width: 600px;
    height: 220px;
    border: 2px solid #94A3B8;
@@ -143,8 +149,8 @@ body {
   
   #presume {
     position: absolute;  
-    left: 660px;
-   top: 580px;
+    left: 620px;
+   top: 560px;
    width: 600px;
    height: 50px;
    border: 2px solid black;
@@ -158,8 +164,8 @@ body {
 
 #restart_button {
     position: absolute;  
-    left: 660px;
-   top: 580px;
+    left: 620px;
+   top: 560px;
    width: 600px;
    height: 50px;
    border: 2px solid black;
@@ -192,8 +198,8 @@ body {
 
 #status {
    position: absolute;
-   left: 30px;
-   top: 30px;
+   left: 10px;
+   top: 10px;
    height: 540px;
    width: 540px;
    border: 1px solid black;
@@ -213,8 +219,8 @@ body {
 
 #intro {
    position: absolute;
-   left: 30px;
-   top: 30px;
+   left: 10px;
+   top: 10px;
    height: 540px;
    width: 540px;
    border: 1px solid black;
