@@ -5,7 +5,7 @@ import '../core/ntango.dart';
 
 
 num gameLength = 700;  //1000
-bool onComputer = false;
+bool onComputer = true;
 
 //defaults for the standard leaf
 num xDragOffset = 60;
@@ -70,6 +70,8 @@ void main() {
   leafstack.onTouchStart.listen( touchStart );
   */
   
+  window.onKeyDown.listen( changeChallenge );
+  
   leafstack.style.visibility = "hidden";
   document.query("#leafmoving").style.visibility = "hidden";
   document.query("#leafimage").style.visibility = "hidden";
@@ -106,6 +108,10 @@ void main() {
   model.requestRedraw();
   model.updateScores();
  // showIntro();
+}
+
+void changeChallenge(KeyboardEvent event) {
+  document.query("#bodytext").text = "hi";
 }
 
 
@@ -630,14 +636,15 @@ class PondTurtle extends Turtle {
   }
   
   void draw(var ctx) {
-    drawLegs(ctx, 0, 0, 0.15);
+    double myrad = 0.15;
+    drawLegs(ctx, 0, 0, myrad);
     //roundRect(ctx, -0.1, -0.1, 0.2, 0.2, 0.1);
     
     //ctx.fillStyle="#AAAAAA";              
     //ctx.fillRect(-.1,-.1,0.2,0.05);
     //ctx.globalCompositeOperation = 'destination-atop';
     ctx.beginPath();
-    ctx.arc(0, 0, 0.15, 0, PI * 2, true);
+    ctx.arc(0, 0, myrad, 0, PI * 2, true);
     ctx.fillStyle = color.toString();
     ctx.fill();
    
@@ -648,7 +655,7 @@ class PondTurtle extends Turtle {
   }
   
   void drawLegs(CanvasRenderingContext2D ctx, num x, num y, num r) {
-    double d = rnd.nextDouble() * 1.5 * r;
+    double d = rnd.nextDouble() * 1.2 * r + 0.3*r;
     double s = 1.5 * r;
     ctx.beginPath();
     ctx.moveTo(x+s,y+d);
