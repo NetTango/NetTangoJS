@@ -16,6 +16,10 @@ Element _draggin = null;
 Point latestDelta = new Point(0,0);
 Point dragPointOffset = new Point(0,0);
 String draggingLeaf = "";
+Map<int,String>touchDraggingLeaves = new Map<int, String>();
+Map<int, Point>touchPointOffsets = new Map<int, Point>();
+Map<String, Point>latestTouchDelta = new Map<String, Point>();
+
 
 CanvasElement canvas = document.query("#drift-pond-pads");
 String turtleBehaviors = "";
@@ -148,18 +152,20 @@ void showIntro() {
 
 //touch-move an already-placed leaf
 void startTouchAdjustingLeaf( TouchEvent event ) {
-  if (event.changedTouches.length > 0 ) {
-    Touch t = event.changedTouches[0];
+  for ( Touch t  in event.changedTouches ) {
+   
     Point testPoint = new Point(t.client.x - scrOffset, t.client.y - scrOffset);
     String wLeaf = findClosestCenterTo(testPoint);
     num dist = testPoint.distanceTo(locationOfLeaf[wLeaf]);
     if ( dist < 50 ) {
-      draggingLeaf = wLeaf;
-      findDragPointOffset( new Point(testPoint.x + scrOffset, testPoint.y + scrOffset)  );
+      touchDraggingLeaves[t.identifier] = wLeaf;
+      findTouchPointOffset( t.identifier,  new Point(testPoint.x + scrOffset, testPoint.y + scrOffset)  );
     }
-  }
+  }  
 }
-//move an already-placed leaf
+
+
+//mouse-move an already-placed leaf
 void startAdjustingLeaf( MouseEvent evt ) {
   Point testPoint = new Point(evt.client.x - scrOffset, evt.client.y - scrOffset);
   String wLeaf = findClosestCenterTo(testPoint);
@@ -194,12 +200,11 @@ void maybeMove( MouseEvent event ) {
 
 //dragHandlerForAllTouchInteractions
 void maybeTouchMove( TouchEvent event ) {
-  if (event.changedTouches.length > 0 ) {
-    Touch t = event.changedTouches[0];
+  for (Touch t in event.changedTouches ) {
     if (_draggin != null) {
       updateDraggin( t.client.x, t.client.y );
-    } else if ( draggingLeaf.length > 0 ) {
-      repositionLeaf( t.client.x , t.client.y  );
+    } else if ( touchDraggingLeaves[t.identifier] != null ) {
+      repositionTouchLeaf(t.identifier, touchDraggingLeaves[t.identifier], t.client.x , t.client.y  );
     }
   }
 }
@@ -208,6 +213,18 @@ void findDragPointOffset(Point clickPoint) {
   dragPointOffset = locationOfLeaf[draggingLeaf] - clickPoint;
 }
 
+void findTouchPointOffset(int identifier, Point clickPoint) {
+  touchPointOffsets[identifier] = locationOfLeaf[draggingLeaf] - clickPoint;
+}
+
+void repositionTouchLeaf( int id, String theLeaf, num nx, num ny) {
+  Point oldLoc = locationOfLeaf[theLeaf];
+  locationOfLeaf[theLeaf] = new Point(nx, ny) + touchPointOffsets[id];
+  Point temp = locationOfLeaf[theLeaf] - oldLoc; 
+  latestTouchDelta[theLeaf] = new Point (model.screenToWorldX(temp.x, temp.y) - zerox, model.screenToWorldY(temp.x, temp.y) - zeroy);
+  
+  model.requestRedraw();
+}
 
 //actually move the adjusted leaf
 void repositionLeaf( nx, ny ) {
@@ -228,6 +245,8 @@ void updateDraggin(x, y) {
 }
 
 
+//THESE TWO NOT USED in version WHEN LEAVES ARE ALREADY PLACED
+/*
 //set the dragging state information as appropriate.
 void dragStart(MouseEvent event) {
   _draggin = document.query("#leafmoving"); 
@@ -246,6 +265,7 @@ void touchStart(TouchEvent event) {
     locationOfLeaf[(leafIndex.toString()) ] = BackInStackPoint;
   }
 }
+*/
 
 //reset state back to not-dragging (general mouse-up handler)
 void dragStop(MouseEvent event) {
@@ -274,9 +294,11 @@ void touchStop(TouchEvent event) {
       _draggin.style.zIndex="5";
       _draggin = null;
       model.requestRedraw();
-    } else if (draggingLeaf.length > 0 ) {
-      draggingLeaf = "";
-      latestDelta = new Point(0,0);
+    } else if (touchDraggingLeaves[t.identifier] != null ) {
+      String theLeaf = touchDraggingLeaves[t.identifier];
+      latestTouchDelta.remove(theLeaf);
+      touchDraggingLeaves.remove(t.identifier);
+      touchPointOffsets.remove(t.identifier);
       model.requestRedraw();
     }
   }
@@ -327,11 +349,28 @@ class DriftModel extends Model {
   }
   
   void updateScores() {
-    redscore.text = turtles.where(redTest).length.toString();
-    yellowscore.text = turtles.where(yellowTest).length.toString();
-    greenscore.text = turtles.where(greenTest).length.toString();
-    bluescore.text = turtles.where(blueTest).length.toString();
-    skyscore.text = turtles.where(cyanTest).length.toString();
+    int r, y, g, b, s;
+    r = turtles.where(redTest).length;
+    y = turtles.where(yellowTest).length;
+    g = turtles.where(greenTest).length;
+    b = turtles.where(blueTest).length;
+    s = turtles.where(cyanTest).length;
+    
+    redscore.text = r.toString();
+    if (r == 0){ redscore.style="background-color:black"; }
+    
+    yellowscore.text = y.toString();
+    if (y == 0){ yellowscore.style="background-color:black"; }
+    
+    greenscore.text = g.toString();
+    if (g == 0){ greenscore.style="background-color:black"; }
+    
+    bluescore.text = b.toString();
+    if (b == 0){ bluescore.style="background-color:black"; }
+    
+    skyscore.text = s.toString();
+    if (s == 0){ skyscore.style="background-color:black"; }
+    
     timescore.text = (gameLength - ticks).toString();
     totalscore.text = turtles.length.toString();
   }
@@ -539,9 +578,11 @@ class PondTurtle extends Turtle {
     var yc = model.worldToScreenY(x, y);
     
     
+    
     if (draggingLeaf.length > 0 && (latestDelta.x != 0 || latestDelta.y != 0) ) {
       Point whereIAM = new Point(xc,yc);
-      if ( findClosestCenterTo(whereIAM) == draggingLeaf)
+      String myLeaf = findClosestCenterTo(whereIAM);
+      if ( myLeaf == draggingLeaf)
       {        
         if ( locationOfLeaf[draggingLeaf].distanceTo(new Point(xc, yc)) > 40 ) {
           Point leafCenter = locationOfLeaf[draggingLeaf];
@@ -549,8 +590,26 @@ class PondTurtle extends Turtle {
           x = model.screenToWorldX( newSpot.x, newSpot.y );
           y = model.screenToWorldY( newSpot.x, newSpot.y );
         }
-      }
+      } 
     }
+    
+    if ( touchDraggingLeaves.keys.isNotEmpty ) {
+      Point whereIAM = new Point(xc,yc);
+      String myLeaf = findClosestCenterTo(whereIAM);
+      if ( latestTouchDelta[myLeaf] != null ) {
+        num dx = latestTouchDelta[myLeaf].x;
+        num dy = latestTouchDelta[myLeaf].y;
+        if ( dx != 0 || dy > 0 ) {
+          if ( locationOfLeaf[myLeaf].distanceTo(new Point(xc, yc)) > 40 ) {
+            Point leafCenter = locationOfLeaf[draggingLeaf];
+            Point newSpot = new Point(weightedAverage( xc, leafCenter.x, 3 ), weightedAverage( yc, leafCenter.y, 3 ));
+            x = model.screenToWorldX( newSpot.x, newSpot.y );
+            y = model.screenToWorldY( newSpot.x, newSpot.y );
+          }
+        }
+      } 
+    }
+      
    
     
     //if (this["energy"] < 45){ print("would die at 45: " + this["energy"].toString()); }

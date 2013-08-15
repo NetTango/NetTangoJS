@@ -76,8 +76,8 @@ body {
    text-align: center;
    font: 22px "Helvetica Neue", Helvetica, Arial, sans-serif;
    font-weight: normal;
-   color:#B4C3D8;
-   background-color: #546378;
+   color:#546378;
+   background-color: #94A3B8;
  }
  
  .left {
@@ -93,15 +93,19 @@ body {
   }
   
   .row1 {
+    font-weight: bold;  
     top:8px;
   }
    .row2 {
+     font-weight: bold;   
     top:35px;
   }
    .row3 {
+        font-weight: bold;
     top:78px;
   }
    .row4 {
+     font-weight: bold;   
     top:105px;
   }
   .row5 {
@@ -130,7 +134,7 @@ body {
    width: 600px;
    height: 220px;
    border: 2px solid black;
-   background-color: #546378;
+   background-color: #94A3B8;
    } 
 
 
