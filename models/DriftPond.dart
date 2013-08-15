@@ -6,6 +6,7 @@ import '../core/ntango.dart';
 
 num gameLength = 500;  //1000
 bool onComputer = false;
+bool goForever = false;
 
 //defaults for the standard leaf
 num xDragOffset = 60;
@@ -111,7 +112,12 @@ void main() {
 }
 
 void changeChallenge(KeyboardEvent event) {
-  document.query("#bodytext").text = "hi";
+  int theKey = event.keyCode;
+  if (theKey == 90) {
+    gameLength += 1000;
+    model.updateScores();
+  }
+  //document.query("#bodytext").text = "hi";
 }
 
 
