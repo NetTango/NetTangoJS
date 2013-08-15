@@ -313,7 +313,7 @@ void touchStop(TouchEvent event) {
 //the actual model class implementation
 class DriftModel extends Model { 
 
-  final int TURTLE_COUNT = 60;
+  final int TURTLE_COUNT = 20;
   Plot plot;
    
   DriftModel(String name) : super(name, 'drift-pond') {
@@ -516,7 +516,7 @@ class DriftModel extends Model {
     Expression behavior = new Expression(parse(turtleBehaviors));
     
     
-    for (int i=0; i<TURTLE_COUNT / 3; i++) {  
+    for (int i=0; i<TURTLE_COUNT / 2; i++) {  
       PondTurtle t = new PondTurtle(this);
       t["energy"] = 85;
       t.color = turtleColors[i % 5].clone();
@@ -524,7 +524,7 @@ class DriftModel extends Model {
       addTurtle(t);
     }
     
-    for (int i=0; i<TURTLE_COUNT / 3; i++) {  
+    for (int i=0; i<TURTLE_COUNT / 2; i++) {  
       PondTurtle t = new PondTurtle(this);
       t["energy"] = 85;
       t.color = turtleColors[i % 5].clone();
