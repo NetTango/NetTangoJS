@@ -5,7 +5,7 @@ import '../core/ntango.dart';
 
 
 num gameLength = 700;  //1000
-bool onComputer = true;
+bool onComputer = false;
 
 //defaults for the standard leaf
 num xDragOffset = 60;
@@ -152,8 +152,9 @@ void showIntro() {
 
 //touch-move an already-placed leaf
 void startTouchAdjustingLeaf( TouchEvent event ) {
+  
   for ( Touch t  in event.changedTouches ) {
-   
+    window.alert("got a touch, id = " + t.identifier.toString()); 
     Point testPoint = new Point(t.client.x - scrOffset, t.client.y - scrOffset);
     String wLeaf = findClosestCenterTo(testPoint);
     num dist = testPoint.distanceTo(locationOfLeaf[wLeaf]);
@@ -355,9 +356,7 @@ class DriftModel extends Model {
     g = turtles.where(greenTest).length;
     b = turtles.where(blueTest).length;
     s = turtles.where(cyanTest).length;
-    
-    print(redscore.style);
-    
+        
     redscore.text = r.toString();
     if (r == 0){ redscore.style.backgroundColor="#94A3B8"; }
     
@@ -631,14 +630,14 @@ class PondTurtle extends Turtle {
   }
   
   void draw(var ctx) {
-    drawLegs(ctx, 0, 0, 0.1);
+    drawLegs(ctx, 0, 0, 0.15);
     //roundRect(ctx, -0.1, -0.1, 0.2, 0.2, 0.1);
     
     //ctx.fillStyle="#AAAAAA";              
     //ctx.fillRect(-.1,-.1,0.2,0.05);
     //ctx.globalCompositeOperation = 'destination-atop';
     ctx.beginPath();
-    ctx.arc(0, 0, 0.1, 0, PI * 2, true);
+    ctx.arc(0, 0, 0.15, 0, PI * 2, true);
     ctx.fillStyle = color.toString();
     ctx.fill();
    
@@ -650,13 +649,14 @@ class PondTurtle extends Turtle {
   
   void drawLegs(CanvasRenderingContext2D ctx, num x, num y, num r) {
     double d = rnd.nextDouble() * 1.5 * r;
+    double s = 1.5 * r;
     ctx.beginPath();
-    ctx.moveTo(x+2*r,y+d);
-    ctx.lineTo(x-2*r,y-d);
-    ctx.moveTo(x+2*r,y);
-    ctx.lineTo(x-2*r,y);
-    ctx.moveTo(x+2*r,y-d);
-    ctx.lineTo(x-2*r,y+d);
+    ctx.moveTo(x+s,y+d);
+    ctx.lineTo(x-s,y-d);
+    ctx.moveTo(x+s,y);
+    ctx.lineTo(x-s,y);
+    ctx.moveTo(x+s,y-d);
+    ctx.lineTo(x-s,y+d);
     ctx.lineWidth = 0.02;
     ctx.strokeStyle = "rgba(10, 10, 10, 1)";
     ctx.stroke();
