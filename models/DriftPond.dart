@@ -4,7 +4,7 @@ import 'dart:json';
 import '../core/ntango.dart';
 
 
-num gameLength = 600;  //1000
+num gameLength = 500;  //1000
 bool onComputer = false;
 
 //defaults for the standard leaf
@@ -590,9 +590,9 @@ class PondTurtle extends Turtle {
       String myLeaf = findClosestCenterTo(whereIAM);
       if ( myLeaf == draggingLeaf)
       {        
-        if ( locationOfLeaf[draggingLeaf].distanceTo(new Point(xc, yc)) > 40 ) {
+        if ( locationOfLeaf[draggingLeaf].distanceTo(new Point(xc, yc)) > 35 ) {
           Point leafCenter = locationOfLeaf[draggingLeaf];
-          Point newSpot = new Point(weightedAverage( xc, leafCenter.x, 3 ), weightedAverage( yc, leafCenter.y, 3 ));
+          Point newSpot = new Point(weightedAverage( xc, leafCenter.x, 2 ), weightedAverage( yc, leafCenter.y, 2 ));
           x = model.screenToWorldX( newSpot.x, newSpot.y );
           y = model.screenToWorldY( newSpot.x, newSpot.y );
         }
@@ -606,7 +606,7 @@ class PondTurtle extends Turtle {
         num dx = latestTouchDelta[myLeaf].x;
         num dy = latestTouchDelta[myLeaf].y;
         if ( dx != 0 || dy > 0 ) {
-          if ( locationOfLeaf[myLeaf].distanceTo(new Point(xc, yc)) > 40 ) {
+          if ( locationOfLeaf[myLeaf].distanceTo(new Point(xc, yc)) > 35 ) {
             Point leafCenter = locationOfLeaf[myLeaf];
             Point newSpot = new Point(weightedAverage( xc, leafCenter.x, 2 ), weightedAverage( yc, leafCenter.y, 2 ));
             x = model.screenToWorldX( newSpot.x, newSpot.y );
@@ -635,7 +635,7 @@ class PondTurtle extends Turtle {
   }
   
   void draw(var ctx) {
-    double myrad = 0.15;
+    double myrad = 0.12;
     drawLegs(ctx, 0, 0, myrad);
     //roundRect(ctx, -0.1, -0.1, 0.2, 0.2, 0.1);
     
