@@ -119,7 +119,18 @@ void changeChallenge(KeyboardEvent event) {
     gameLength += 500;
     model.updateScores();
   }
-  //document.query("#bodytext").text = "hi";
+  if (theKey >= 49 && theKey <= 51) {
+    int num = theKey - 48;
+    document.query("#bodytext").innerHtml = "<p><b>Game 2</b><p><u>Your Goal</u>:  Preserve <br><b>exactly ${num}</b> species.";
+  }
+  if (theKey == 52) {
+    document.query("#bodytext").innerHtml = "<p><b>Game 3</b><p><u>Your Goal</u>:  Create <b>2</b> populated islands,<br>each with <b>exactly two</b> species.";
+  }
+
+  if (theKey == 53) {
+    document.query("#bodytext").innerHtml = "<p><b>Game 4</b><p><u>Your Goal</u>:  Create <b>5</b> populated islands,<br>each with <b>only one</b> species.";
+  }
+  //
 }
 
 
