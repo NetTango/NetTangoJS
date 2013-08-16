@@ -2,13 +2,25 @@ library nettango;
 
 import 'dart:html';
 import 'dart:math';
-import 'dart:json';
 import '../core/ntango.dart';
 
+bool showingBackground = true;
+
 void main() {
+  window.onContextMenu.listen((event){event.preventDefault();});
+  window.onKeyDown.listen( hideShowBackground );
    CamoModel model = new CamoModel();
    model.restart();
    model.play(1);
+}
+
+void hideShowBackground(KeyboardEvent event) {
+  CanvasElement patchesCanvas = document.query("#camo-patches");
+  if ( patchesCanvas.style.visibility == "hidden") {
+    patchesCanvas.style.visibility = "visible";
+  } else {
+    patchesCanvas.style.visibility = "hidden";
+  } 
 }
 
 
