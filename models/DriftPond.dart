@@ -5,7 +5,7 @@ import '../core/ntango.dart';
 
 
 num gameLength = 500;  //1000
-bool onComputer = false;
+bool onComputer = true;
 bool goForever = false;
 
 //defaults for the standard leaf
@@ -595,6 +595,14 @@ class PondTurtle extends Turtle {
     
   }
   
+  //used for the "fuel tank visualization" which is no longer in the active version.
+  num percentDrainedOfEnergy(  ) {
+    num energy = this["energy"];
+    if (energy > 94 ) { return 0.0; }
+    if (energy < 45 ) { return 1.0; }
+    return 1 - (energy - 45) / 50;
+  }
+  
   //overriding TICK because i need to work with conditions that are not "netlogo-native"
   void tick() {
     super.tick();
@@ -654,20 +662,32 @@ class PondTurtle extends Turtle {
   }
   
   void draw(var ctx) {
+   
     double myrad = 0.12;
     drawLegs(ctx, 0, 0, myrad);
-    //roundRect(ctx, -0.1, -0.1, 0.2, 0.2, 0.1);
-    
-    //ctx.fillStyle="#AAAAAA";              
-    //ctx.fillRect(-.1,-.1,0.2,0.05);
-    //ctx.globalCompositeOperation = 'destination-atop';
     ctx.beginPath();
+/*    ctx.fillStyle = "#000";
     ctx.arc(0, 0, myrad, 0, PI * 2, true);
+    ctx.fill();
+    ctx.closePath();
+    
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(-.1,-.1,0.2,0.2*percentDrainedOfEnergy());
+    ctx.clip();
+  
+    ctx.beginPath(); */
+    ctx.arc(0, 0, myrad, 0, PI * 2, true);
+    //ctx.closePath();
     ctx.fillStyle = color.toString();
     ctx.fill();
-   
+    
+  /*  ctx.restore();
+    
     ctx.strokeStyle = "rgba(10, 10, 10, 0.5)";
     ctx.lineWidth = 0.05;
+    ctx.beginPath();
+    ctx.arc(0, 0, myrad, 0, PI * 2, true);*/
     ctx.stroke();
     ctx.closePath();
   }
