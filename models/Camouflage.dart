@@ -26,9 +26,35 @@ void hideShowBackground(KeyboardEvent event) {
 
 class CamoModel extends Model { 
   
-  final int TURTLE_COUNT = 60;
+  Plot plot;
+  
+  final int TURTLE_COUNT = 20;
    
   CamoModel() : super("Camouflage", "camo") {  
+    // Setting up plot
+    plot = new Plot("camo-color-plot");
+    plot.title = "Mostly R, G, B";
+    plot.labelX = "time";
+    
+    Pen redPen = new Pen("Red", "red");
+    redPen.updater = (int ticks) { return turtles.where(mostlyRedtest).length; };
+    plot.addPen(redPen);
+    
+    Pen greenPen = new Pen("Green", "green");
+    greenPen.updater = (int ticks) { return turtles.where(mostlyGreentest).length; };
+    plot.addPen(greenPen);
+    
+    Pen bluePen = new Pen("Blue", "blue");
+    bluePen.updater = (int ticks) { return turtles.where(mostlyBluetest).length; };
+    plot.addPen(bluePen);
+    
+    plot.minY = 0;
+    plot.maxY = TURTLE_COUNT;
+    plot.minX = 0;
+    plot.maxX = 100;
+    addPlot(plot);
+
+    
   }
    
    
@@ -55,6 +81,16 @@ class CamoModel extends Model {
       }
     }
   }
+
+  int meanGreen(){
+    int green = 0;
+    for (CamoTurtle t in turtles){
+      green += t.color.g;
+    }
+    print(green / turtles.length);
+  }
+   
+  
 }
 
 
@@ -64,21 +100,12 @@ class CamoTurtle extends Turtle {
       color.red = Turtle.rnd.nextInt(255);
       color.green = Turtle.rnd.nextInt(255);
       color.blue = Turtle.rnd.nextInt(255);
-      color.alpha = 100;
-      //drawShape = drawCircle;
+      color.alpha = 150;
    }
    
    
   void tick() { }
    
-//   
-//  void draw(CanvasRenderingContext2D ctx) {
-//    ctx.beginPath();
-//    ctx.arc(0, 0, 0.3, 0, PI * 2, true);
-//    ctx.fillStyle = color.toString();
-//    ctx.fill(); 
-//  }
-//   
   
   void draw(var ctx) {
     drawLegs(ctx, 0, 0, 0.1);
@@ -108,21 +135,18 @@ class CamoTurtle extends Turtle {
     ctx.stroke();
   }
   
-  
-   
   void reproduce() {
     CamoTurtle copy = new CamoTurtle(model);
-    copy.x = x;
-    copy.y = y;
+    copy.x = model.maxPatchX - 2 * model.maxPatchX * Turtle.rnd.nextDouble();
+    copy.y = model.maxPatchY - 2 * model.maxPatchY * Turtle.rnd.nextDouble();
     copy.color = this.color.clone();
-    copy.color.red += (10 - Turtle.rnd.nextInt(20));
-    copy.color.green += (10 - Turtle.rnd.nextInt(20));
-    copy.color.blue += (10 - Turtle.rnd.nextInt(20));
-    copy.right(Turtle.rnd.nextInt(360));
-    copy.forward(Turtle.rnd.nextDouble());
+    copy.color.r += 5 - Turtle.rnd.nextInt(10);
+    copy.color.g += 5 - Turtle.rnd.nextInt(10);
+    copy.color.b += 5 - Turtle.rnd.nextInt(10);
     copy.stayWithinBoundaries();
     model.addTurtle(copy);
   }
+  
   
   void stayWithinBoundaries(){
     if (x >= model.maxPatchX) {x--;}
@@ -132,4 +156,23 @@ class CamoTurtle extends Turtle {
   }
   
   
+
+}
+
+
+bool mostlyRedtest(CamoTurtle turtle){
+  bool mostlyRed;
+  mostlyRed = turtle.color.r > turtle.color.g && turtle.color.r > turtle.color.b ? true : false;
+  return mostlyRed;
+}
+bool mostlyGreentest(CamoTurtle turtle){
+  bool mostlyGreen;
+  mostlyGreen = turtle.color.g > turtle.color.r && turtle.color.g > turtle.color.b ? true : false;
+  return mostlyGreen;
+}
+bool mostlyBluetest(CamoTurtle turtle){
+  bool mostlyBlue;
+  mostlyBlue = turtle.color.b > turtle.color.g && turtle.color.b > turtle.color.r ? true : false;
+  return mostlyBlue;
+
 }

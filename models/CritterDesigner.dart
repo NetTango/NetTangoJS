@@ -18,6 +18,7 @@ import '../core/ntango.dart';
 
 class DesignerModel extends Model { 
   CritterDesignerPad designPad;
+  List<DesignerPatch> patches = new List<DesignerPatch>();
   
   static Random random = new Random();
 

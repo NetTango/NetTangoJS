@@ -470,6 +470,6 @@ abstract class Model {
     for (Touch touch in tframe.changedTouches) {
       doTouchDrag(new Contact.fromTouch(touch, canvas));
     }
-  }  
+  }
 }
 
