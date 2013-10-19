@@ -28,7 +28,7 @@ class CamoModel extends Model {
   
   Plot plot;
   
-  final int TURTLE_COUNT = 20;
+  final int TURTLE_COUNT = 25;
    
   CamoModel() : super("Camouflage", "camo") {  
     // Setting up plot
@@ -53,7 +53,6 @@ class CamoModel extends Model {
     plot.minX = 0;
     plot.maxX = 100;
     addPlot(plot);
-
     
   }
    
@@ -77,6 +76,15 @@ class CamoModel extends Model {
         t.die();
         CamoTurtle ct = oneOfTurtles() as CamoTurtle;
         ct.reproduce();
+        var reds = 0;
+        var greens = 0;
+        var blues = 0;
+        for (CamoTurtle t in turtles){
+          reds += (mostlyRedtest(t)) ? 0 : 1;
+          blues += (mostlyBluetest(t)) ? 0 : 1;
+          greens += (mostlyGreentest(t)) ? 0 : 1;
+          
+        }
         return;
       }
     }

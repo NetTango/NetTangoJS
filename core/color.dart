@@ -53,5 +53,5 @@ class Color {
   String toString() {
     num ad = a / 255;
     return "rgba($r, $g, $b, $ad)";
-  }
+  } 
 }
