@@ -120,4 +120,17 @@ class AgentSet {
       return new AgentSet.fromAgent(agents[rand.nextInt(agents.length)]);
     }
   }
+  
+  
+  /**
+   * Return an agent selected at random
+   */
+  Agent oneOfAgents() {
+    if (agents.length == 0) {
+      return null;
+    } else {
+      return  agents[rand.nextInt(agents.length)] ;
+    }
+  }
+  
 }
