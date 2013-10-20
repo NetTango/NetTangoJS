@@ -21,12 +21,10 @@ class ArtificialModel extends Model {
   Plot plot;
   int starvations = 0;
   int births = 0;
+  ArtificialTurtle turtleBeingDragged = null;
+  
   final int TURTLE_COUNT = 30;
-  //int patchSize = 60;
-  
-  // Dimensions of the world in patch coordinates 
-  
-  
+
    
   ArtificialModel() : super("Artificial Selection", "artificial") {  
    
@@ -36,8 +34,7 @@ class ArtificialModel extends Model {
     maxPatchY = 14;
     minPatchY = -14;
     
-    
-    
+
     // Setting up plot
     plot = new Plot("artificial-plot");
     plot.title = "Population";
@@ -76,7 +73,6 @@ class ArtificialModel extends Model {
       addTurtle(t);
       num safeWorldW = worldWidth - 2;
       num safeWorldH = worldHeight - 2;
-      t.setXY(0, 0);
       t.setXY(Model.rnd.nextDouble() *  safeWorldW -  safeWorldW / 2, 
               Model.rnd.nextDouble() *  safeWorldH -  safeWorldH / 2 );
     }
@@ -101,23 +97,29 @@ class ArtificialModel extends Model {
 
    
   void doTouchDown(Contact c) {
+    turtleBeingDragged = null;
     for (int i=0; i<turtles.length; i++) {
       ArtificialTurtle t = turtles[i] as ArtificialTurtle;
       if (t.containsTouch(c)) {
-        t.forward(1);
+        
+        turtleBeingDragged = t;
+        return;
       }
+    }    
+  }
+  
+  void doTouchUp(Contact c) {
+    turtleBeingDragged = null;
+  }
+  
+  void doTouchDrag(Contact c) { 
+    if (turtleBeingDragged != null) {
+      turtleBeingDragged.touchDrag(c);
     }
   }
   
   void tick() {
     super.tick();
-    /*num excess = turtles.length - 200;
-    while (excess > 0 ) {
-      Turtle t = turtles[ Turtle.rnd.nextInt(turtles.length) ];
-      t.die();
-      excess--;
-    }
-    */
   }
 
   
@@ -133,7 +135,6 @@ class ArtificialTurtle extends Turtle {
       color.green = Turtle.rnd.nextInt(255);
       color.blue = Turtle.rnd.nextInt(255);
       color.alpha = 255;
-      
   
       this["drawFunctions"] = new List<Function>();
       this["radius"] = 0.2 + Turtle.rnd.nextDouble() * .1;
@@ -154,48 +155,64 @@ class ArtificialTurtle extends Turtle {
   }
     
   bool notMe( Turtle maybeOther ) {
-    return maybeOther.id != id;
+    return (maybeOther == null) || (maybeOther.id != id);
+  }
+  
+  bool isMe( Turtle maybeOther ) {
+    return (maybeOther != null)  && !notMe( maybeOther );
   }
   
   void tick() { 
-    if (this["age"] > 20) {
-      right( Turtle.rnd.nextInt(20) );
-      left( Turtle.rnd.nextInt(20) );
-      forward(.2);
-      this["energy"] -= 2;
-      
-      Patch p = patchHere();
-      num ener = p["plant-energy"];
-      if (ener - 8 > 10) {
-        p["plant-energy"] = ener - 8;
-        this["energy"] += 3;
-      }
-      
-      if ( this["energy"] < 0) {
-        //print("dying for lack of energy");
-        die();
-        (model as ArtificialModel).anotherStarvation();
-      }
-      AgentSet others = this.turtlesHere();
-      if ( others.length == 2)
-      {
-        for ( Turtle t in others.agents ) {
-          ArtificialTurtle at = t as ArtificialTurtle;
-          if ( notMe(at) ) {
-            if( this["energy"] > 15 && at["energy"] > 15 && at["age"] > 20 ) {
-              reproduceWith(at);
-              (model as ArtificialModel).anotherBirth();
+    ArtificialTurtle beingDragged = (model as ArtificialModel).turtleBeingDragged;
+    if ( notMe(beingDragged) ) {
+      if (this["age"] > 20) {
+        right( Turtle.rnd.nextInt(20) );
+        left( Turtle.rnd.nextInt(20) );
+        forward(.2);
+        this["energy"] -= 2;
+        
+        Patch p = patchHere();
+        num ener = p["plant-energy"];
+        if (ener - 8 > 10) {
+          p["plant-energy"] = ener - 8;
+          this["energy"] += 3;
+        }
+        
+        if ( this["energy"] < 0) {
+          //print("dying for lack of energy");
+          die();
+          (model as ArtificialModel).anotherStarvation();
+        }
+        AgentSet others = this.turtlesHere();
+        if ( others.length == 2)
+        {
+          for ( Turtle t in others.agents ) {
+            ArtificialTurtle at = t as ArtificialTurtle;
+            if ( notMe(at) ) {
+              if( this["energy"] > 15 && at["energy"] > 15 && at["age"] > 20 ) {
+                reproduceWith(at);
+                (model as ArtificialModel).anotherBirth();
+              }
+              return;
             }
-            return;
-          }
-        }      
+          }      
+        }
       }
+      this["age"]++;
     }
-    this["age"]++;
   }
    
   
   void draw(var ctx) {
+    ArtificialTurtle draggedOne = (model as ArtificialModel).turtleBeingDragged;
+    if ( isMe(draggedOne) ) {
+      ctx.beginPath();
+      ctx.strokeStyle = "#FFF";
+      ctx.arc(0, 0, this["radius"] * 4, 0, PI * 2, true);
+      ctx.lineWidth = 0.05;
+      ctx.stroke();
+      ctx.closePath();
+    }
     if (this["age"] > 15) {
       //START with the custom draw functions.
       for ( Function f in (this["drawFunctions"]) ) {
@@ -215,7 +232,6 @@ class ArtificialTurtle extends Turtle {
   
   void drawLegs(CanvasRenderingContext2D ctx, num x, num y, num r) {
     double d = Turtle.rnd.nextDouble() * r + 0.5*r;
-    //double d = 1.5 * r;
     
     ctx.beginPath();
     ctx.moveTo(x+2*r,y+d);
@@ -233,13 +249,13 @@ class ArtificialTurtle extends Turtle {
     
     this["energy"] = this["energy"] / 2;
     mate["energy"] = mate["energy"] / 2;
+    
     ArtificialTurtle offspring = new ArtificialTurtle(model);
     
     offspring.x = x ;
     offspring.y = y ;
     offspring.heading = heading + 180;
     
-    offspring.color = this.color.clone();
     offspring.color.r =  averageAndMutateInt(color.r, mate.color.r, 10);
     offspring.color.g =  averageAndMutateInt( color.g, mate.color.g , 10);
     offspring.color.b = averageAndMutateInt(color.b, mate.color.b, 10);
