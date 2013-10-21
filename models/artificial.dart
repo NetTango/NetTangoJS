@@ -25,6 +25,22 @@ class ArtificialModel extends Model {
   
   final int TURTLE_COUNT = 30;
 
+  /*
+   * idea:  traits and phenotypes defined at the model level, with genotypess specified at turtle leve
+   * 
+   * Trait --> color 
+   * Dominant, red 
+   * Recessive, blue
+   * 
+   * Trait --> shape
+   * Dominant, circle
+   * Recessive, square
+   * 
+   * Trait --> size 
+   * Continuously distributed
+   * 
+   * 
+   */
    
   ArtificialModel() : super("Artificial Selection", "artificial") {  
    
