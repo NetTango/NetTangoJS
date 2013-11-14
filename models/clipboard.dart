@@ -1,6 +1,6 @@
 import 'dart:html';
 import 'dart:math';
-import 'dart:json';
+import 'package:json/json.dart' as json;
 
 import '../core/ntango.dart';
   

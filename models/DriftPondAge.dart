@@ -1,6 +1,6 @@
 import 'dart:html';
 import 'dart:math';
-import 'dart:json';
+import 'package:json/json.dart' as json;
 import '../core/ntango.dart';
 
 
@@ -549,7 +549,7 @@ class DriftModel extends Model {
       ] ]
     ]
     """;
-    Expression behavior = new Expression(parse(turtleBehaviors));
+    Expression behavior = new Expression(json.parse(turtleBehaviors));
     
     
     for (int i=0; i<TURTLE_COUNT / 2; i++) {  
@@ -584,7 +584,7 @@ class DriftModel extends Model {
     
     //remove patch coloration for plant energy indication.
     //[ "set", "color-blue", "plant-energy" ]  
-    behavior = new Expression(parse(patchBehaviors));
+    behavior = new Expression(json.parse(patchBehaviors));
     
     for (Patch patch in patches) {
       patch.color.setColor(0, 0, 100, 128);
