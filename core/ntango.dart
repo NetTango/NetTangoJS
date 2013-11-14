@@ -17,6 +17,7 @@ import 'dart:async';
 
 part 'agent.dart';
 part 'agentset.dart';
+part 'agentsetnew.dart';
 part 'color.dart';
 part 'expression.dart';
 part 'interpreter.dart';
@@ -27,4 +28,3 @@ part 'toolbar.dart';
 part 'touch.dart';
 part 'turtle.dart';
 part 'utils.dart';
-

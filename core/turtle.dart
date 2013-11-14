@@ -47,6 +47,7 @@ class Turtle extends Agent implements Touchable {
   }
   
   
+  
   Turtle clone() {
     Turtle t = new Turtle(model);
     t.x = x;
