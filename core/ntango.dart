@@ -11,7 +11,7 @@ library NetTango;
 
 import 'dart:html';
 import 'dart:math';
-import 'dart:json' as json;
+import 'package:json/json.dart' as json;
 import 'dart:svg' as svg;
 import 'dart:async';
 
