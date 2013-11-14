@@ -1,6 +1,6 @@
 import 'dart:html';
 import 'dart:math';
-import 'package:json/json.dart' as json;
+import '../packages/json/json.dart' as json;
 import '../core/ntango.dart';
 
 
@@ -24,21 +24,21 @@ Map<int, Point>touchPointOffsets = new Map<int, Point>();
 Map<String, Point>latestTouchDelta = new Map<String, Point>();
 
 
-CanvasElement canvas = document.query("#drift-pond-pads");
+CanvasElement canvas = document.querySelector("#drift-pond-pads");
 String turtleBehaviors = "";
 
-var redscore = document.query("#red");
-var yellowscore = document.query("#yellow");
-var bluescore = document.query("#blue");
-var greenscore = document.query("#green");
-var skyscore = document.query("#sky");
-var totalscore = document.query("#total");
-var timescore = document.query("#time");
+var redscore = document.querySelector("#red");
+var yellowscore = document.querySelector("#yellow");
+var bluescore = document.querySelector("#blue");
+var greenscore = document.querySelector("#green");
+var skyscore = document.querySelector("#sky");
+var totalscore = document.querySelector("#total");
+var timescore = document.querySelector("#time");
 
 
-var leafImage = document.query("#leafimage");
+var leafImage = document.querySelector("#leafimage");
 bool paused = false;
-var pauseResumeButton = document.query("#presume");
+var pauseResumeButton = document.querySelector("#presume");
 var BackInStackPoint = new Point(660,600);
 int leafIndex = 0;
 Map<String,Point> locationOfLeaf = new Map<String,Point>();
@@ -67,7 +67,7 @@ void main() {
   window.onContextMenu.listen((event){event.preventDefault();});
   
   locationOfLeaf["-1"] = new Point(250 + xDragOffset,250+yDragOffset);
-  var leafstack = document.query("#leafstack");
+  var leafstack = document.querySelector("#leafstack");
   
   //uncomment these 2 lines and re-comment subsequent ones for default behavior
   /*
@@ -78,8 +78,8 @@ void main() {
   window.onKeyDown.listen( changeChallenge );
   
   leafstack.style.visibility = "hidden";
-  document.query("#leafmoving").style.visibility = "hidden";
-  document.query("#leafimage").style.visibility = "hidden";
+  document.querySelector("#leafmoving").style.visibility = "hidden";
+  document.querySelector("#leafimage").style.visibility = "hidden";
   locationOfLeaf["0"] = new Point(50+xDragOffset,350+yDragOffset);
   locationOfLeaf["1"] = new Point(350+xDragOffset,50+yDragOffset);
   locationOfLeaf["2"] = new Point(380+xDragOffset,350+yDragOffset);
@@ -94,7 +94,7 @@ void main() {
   pauseResumeButton.onTouchEnd.listen( pauseOrResumeTouch );
   pauseResumeButton.onMouseUp.listen( pauseOrResumeMouse );
   
-  var topCanv = document.query("#drift-pond-turtles");
+  var topCanv = document.querySelector("#drift-pond-turtles");
   topCanv.onMouseDown.listen( startAdjustingLeaf );
   topCanv.onTouchStart.listen( startTouchAdjustingLeaf );
   
@@ -123,14 +123,14 @@ void changeChallenge(KeyboardEvent event) {
   }
   if (theKey >= 49 && theKey <= 51) {
     int num = theKey - 48;
-    document.query("#bodytext").innerHtml = "<p><b>Game 2</b><p><u>Your Goal</u>:  Preserve <br><b>exactly ${num}</b> species.";
+    document.querySelector("#bodytext").innerHtml = "<p><b>Game 2</b><p><u>Your Goal</u>:  Preserve <br><b>exactly ${num}</b> species.";
   }
   if (theKey == 52) {
-    document.query("#bodytext").innerHtml = "<p><b>Game 3</b><p><u>Your Goal</u>:  Create <b>2</b> populated islands,<br>each with <b>exactly two</b> species.";
+    document.querySelector("#bodytext").innerHtml = "<p><b>Game 3</b><p><u>Your Goal</u>:  Create <b>2</b> populated islands,<br>each with <b>exactly two</b> species.";
   }
 
   if (theKey == 53) {
-    document.query("#bodytext").innerHtml = "<p><b>Game 4</b><p><u>Your Goal</u>:  Create <b>5</b> populated islands,<br>each with <b>only one</b> species.";
+    document.querySelector("#bodytext").innerHtml = "<p><b>Game 4</b><p><u>Your Goal</u>:  Create <b>5</b> populated islands,<br>each with <b>only one</b> species.";
   }
   //
 }
@@ -161,17 +161,17 @@ void pauseOrResume() {
 }
 
 void showIntro() {
-  document.query("#drift-pond-toolbar").style.visibility = "hidden";
+  document.querySelector("#drift-pond-toolbar").style.visibility = "hidden";
   pauseResumeButton.style.visibility="hidden";
   bindClickEvent("intro", (event) {
     if (getHtmlOpacity("intro") > 0) {
       setHtmlOpacity("intro", 0.0);
-      document.query("#intro").style.visibility = "hidden";
+      document.querySelector("#intro").style.visibility = "hidden";
       model.play();
       pauseResumeButton.style.visibility="visible";
     }
   });
-  document.query("#intro").style.visibility = "visible";
+  document.querySelector("#intro").style.visibility = "visible";
   setHtmlOpacity("intro", 1.0);
 }
 
@@ -433,11 +433,11 @@ class DriftModel extends Model {
       bindClickEvent("status", (event) {
         if (getHtmlOpacity("status") > 0) {
           setHtmlOpacity("status", 0.0);
-          document.query("#drift-pond-toolbar").style.visibility = "hidden";
+          document.querySelector("#drift-pond-toolbar").style.visibility = "hidden";
           setupRestartButton();
         }
       });
-      document.query("#status").style.visibility = "visible";
+      document.querySelector("#status").style.visibility = "visible";
       showStatusMessage(fullLengthMessage);
     } else if ( turtles.length == 0  ) {
       String allDiedMessage = "<div id='title'><p><p><p>GAME OVER!</div><br><br><p><p>Sadly,<br>all of your bugs died!";
@@ -445,17 +445,17 @@ class DriftModel extends Model {
       bindClickEvent("status", (event) {
         if (getHtmlOpacity("status") > 0) {
           setHtmlOpacity("status", 0.0);
-          document.query("#drift-pond-toolbar").style.visibility = "hidden";
+          document.querySelector("#drift-pond-toolbar").style.visibility = "hidden";
           setupRestartButton();
         }
       });
-      document.query("#status").style.visibility = "visible";
+      document.querySelector("#status").style.visibility = "visible";
       showStatusMessage(allDiedMessage);
     }
   }
    
   void setupRestartButton() {
-    InputElement restrt = document.query("#restart_button");
+    InputElement restrt = document.querySelector("#restart_button");
     restrt.style.visibility = "visible";
     bindClickEvent("restart_button", (event) {
       window.location.reload();
@@ -765,7 +765,7 @@ class PondTurtle extends Turtle {
     t.color = color.clone();
     t["energy"] = 0;
     //print("birth from bug of age "+this["energy"].toString());
-    Expression behavior = new Expression(parse(turtleBehaviors));
+    Expression behavior = new Expression(json.parse(turtleBehaviors));
     
     t.setBehavior(behavior);
     return t;
