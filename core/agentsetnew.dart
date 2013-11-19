@@ -54,8 +54,7 @@ class AgentSetNew implements Set<Turtle>{
 
     return this;
   }
-  
-
+ 
   
 
   
