@@ -1,0 +1,87 @@
+
+* { 
+   -webkit-user-select: none; 
+   -webkit-tap-highlight-color: rgba(0,0,0,0);    
+}
+
+body {
+   margin: 0;
+   padding: 0;
+   color: #ccc;
+   font: 15px "Helvetica Neue", Helvetica, Arial, sans-serif;
+   font-weight: 300;
+   line-height: 1.625;
+   overflow: hidden;
+   background-color: #445368;
+}
+
+#background {
+  left:0px;
+  top:0px;
+  width:1200px;
+  height:600px;
+  z-index: -1;
+}
+
+#test1 {
+    position:absolute;
+   visibility:hidden;
+   background-color: #883333;
+}
+
+.test1 {
+  left:0px;
+  top:0px;
+}
+
+#test2 {
+  position:absolute;
+   visibility:hidden;
+   background-color: #338833;
+}
+
+.test2 {
+  left:600px;
+  top:0px;
+}
+
+#test3 {
+    position:absolute;
+   visibility:hidden;
+   background-color: #333388;
+}
+
+.test3 {
+  left:0px;
+  top:300px;
+}
+
+
+#test4 {
+    position:absolute;
+   visibility:hidden;
+   background-color: #888888;
+}
+
+.test4 {
+  left:600px;
+  top:300px;
+}
+
+.part {
+  z-index: 0;
+   width:600px;
+   height:300px;
+   
+}
+
+.whole {
+  width : 1200px;
+  height : 600px;
+  left : 0px;
+  top : 0px;
+  z-index:2;
+  transition: left .5s, top .5s, width .5s, height.5s;
+   -moz-transition:  left .5s, top .5s, width .5s, height.5s ;
+   -webkit-transition:  left .5s, top .5s, width .5s, height.5s ;
+}
