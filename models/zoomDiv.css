@@ -24,8 +24,7 @@ body {
 }
 
 #test1 {
-    position:absolute;
-   visibility:hidden;
+   position:absolute;
    background-color: #883333;
 }
 
@@ -36,8 +35,7 @@ body {
 
 #test2 {
   position:absolute;
-   visibility:hidden;
-   background-color: #338833;
+  background-color: #338833;
 }
 
 .test2 {
@@ -46,8 +44,7 @@ body {
 }
 
 #test3 {
-    position:absolute;
-   visibility:hidden;
+   position:absolute;
    background-color: #333388;
 }
 
@@ -58,8 +55,7 @@ body {
 
 
 #test4 {
-    position:absolute;
-   visibility:hidden;
+   position:absolute;
    background-color: #888888;
 }
 
@@ -72,7 +68,6 @@ body {
   z-index: 0;
    width:600px;
    height:300px;
-   
 }
 
 .whole {

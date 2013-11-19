@@ -1,24 +1,17 @@
 import 'dart:html';
 
 Element e1, e2, e3, e4;
-String biggedClass = "";
+String zoomedClass = "";
 
 void main() {
-  
-  print("hi");
   e1 = document.querySelector("#test1");
-  e1.style.visibility= "visible";
   e1.classes.add("test1");
   e2 = document.querySelector("#test2");
-  e2.style.visibility= "visible";
   e2.classes.add("test2");
-  e3=document.querySelector("#test3");
-  e3.style.visibility= "visible";
+  e3 = document.querySelector("#test3");
   e3.classes.add("test3");
-  e4=document.querySelector("#test4");
-  e4.style.visibility= "visible";
+  e4 = document.querySelector("#test4");
   e4.classes.add("test4");
-  print("there");
   
   e1.onMouseDown.listen( zoomIt );
   e2.onMouseDown.listen( zoomIt );
@@ -28,21 +21,21 @@ void main() {
 
 
 void zoomIt( MouseEvent event ) {
-  biggedClass = event.target.id;
-  Element e = document.querySelector("#"+biggedClass);
+  zoomedClass = event.target.id;
+  Element e = document.querySelector("#"+zoomedClass);
   e.classes.remove("part");
-  e.classes.remove(biggedClass);
+  e.classes.remove(zoomedClass);
   e.classes.add("whole");
   e.onMouseDown.listen(unZoom);
   e.removeEventListener("mousedown", zoomIt);
 }
 
 void unZoom(MouseEvent event) {
-  Element currentBig = document.querySelector("#"+biggedClass);
+  Element currentBig = document.querySelector("#"+zoomedClass);
   currentBig.classes.remove("whole");
+  currentBig.classes.add(zoomedClass);
   currentBig.classes.add("part");
-  currentBig.classes.add(biggedClass);
   currentBig.onMouseDown.listen(zoomIt);
-  biggedClass = "";
+  zoomedClass = "";
   currentBig.removeEventListener("mousedown", unZoom);
 }
