@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>graph</title>
+  </head>
+ 
+  <body>   
+    <p id="text"></p>
+    <script type="application/dart" src="graph.dart"></script>
+    <!-- for this next line to work, your pubspec.yaml file must have a dependency on 'browser' -->
+    <script src="packages/browser/dart.js"></script>
+    <iframe id="graph" src="graphBase.html" style="position:relative;width:100%;height:400px"></iframe>
+    
+    <form name="form">
+      <input type="submit"/>
+    </form>
+    
+    <script>
+    
+      var win = document.getElementById("graph").contentWindow
+    
+      document.forms.form.onsubmit = function() {
+        win.postMessage(
+          "Hello",
+          "http://127.0.0.1:3030" 
+        )
+        return false
+      }
+    </script>
+    
+  </body>
+</html>

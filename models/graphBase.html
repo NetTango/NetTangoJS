@@ -1,0 +1,87 @@
+<html>
+	<head>
+		<title>Drift Pond Graph</title>
+		<script src="http://d3js.org/d3.v2.js"></script>
+		<script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
+		<script src="../js/data.js"></script>
+		<script src="../js/line-graph.js"></script>
+		<link rel="stylesheet" href="../css/style.css" type="text/css">
+		<style>
+			body {
+				font-family: "Helvetica Neue", Helvetica;
+			}
+					
+			p {
+				clear:both;
+				top: 20px;
+			}		
+					
+			div.aGraph {
+				margin-bottom: 30px;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="graph1" style="position:relative;width:100%;height:400px"></div>
+		<!--<div id="graph2" class="aGraph" style="float:left;position:relative;width:49%;height:200px"></div>
+		<div id="graph3" class="aGraph" style="float:left;position:relative;width:49%;height:200px"></div>-->
+	<script>
+		 data["displayNames"] = ["Green","Orange","Red","Blue"];
+		 data["colors"] = ["green","orange","red","blue"];
+		 data["scale"] = "pow";
+		
+		// create graph now that we've added presentation config
+		var l1 = new LineGraph({containerId: 'graph1', data: data});
+		//var l2 = new LineGraph({containerId: 'graph2', data: data2});
+		//var l3 = new LineGraph({containerId: 'graph3', data: data3});
+		/*setInterval(function() {
+			var newData = [];
+			data.values.forEach(function(dataSeries, index) {
+				var v = dataSeries.shift();
+				dataSeries.push(v);
+				// put this value in newData as an array with 1 value
+				newData[index] = [v];
+			})
+			
+			// we will reuse dataA each time
+			dataA.values = newData;
+			// increment time 1 step
+			dataA.start = dataA.start + dataA.step;
+			dataA.end = dataA.end + dataA.step; 
+						
+			l1.slideData(dataA);
+		}, 100);*/
+		
+		window.addEventListener("message", receiveMessage, false);
+		
+		function receiveMessage(event)
+		{
+		  console.log(event.origin);
+          if ( event.origin !== "http://127.0.0.1:3030" ){
+          	return;
+          }
+          
+          var newData = [];
+          data.values.forEach(function(dataSeries, index) {
+          	var v = dataSeries.shift();
+          	dataSeries.push(v);
+          	// put this value in newData as an array with 1 value
+          	newData[index] = [v];
+          })
+          
+          // we will reuse dataA each time
+          dataA.values = newData;
+          // increment time 1 step
+          dataA.start = dataA.start + dataA.step;
+          dataA.end = dataA.end + dataA.step; 
+          			
+          l1.slideData(dataA);
+		  document.getElementById("receiver").innerHTML = "received: "+event.data
+		}
+
+		
+	</script>
+    <div id="receiver">Send me a message!</div>
+    
+	</body>
+</html>
