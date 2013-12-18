@@ -10,8 +10,6 @@ import '../core/ntango.dart';
     model.play(1);
   }
 
-
-
 class DesignerModel extends Model { 
   CritterDesignerPad designPad;
   
